@@ -1,0 +1,34 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.root {
+    -fx-background-color: #808080;
+    -fx-font-size:12;
+}
+
+.button{
+    /*-fx-background-color:linear-gradient(#dc9656,#ab4642);*/
+    -fx-background-color:#b22222;
+    -fx-text-fill:#dcdcdc;
+    -fx-background-radius: 6em;
+}
+
+.button:hover{
+    -fx-background-color:#dc9656;
+}
+
+.button:pressed{
+    -fx-background-color:#ab4642;
+}
+#gpane{
+    -fx-background-color: #dcdcdc;
+    -fx-font-size:12;
+    -fx-border: 10px ridge ;
+    -fx-background-radius: 1em;
+    -fx-background-top-right-radius: 10% 30%;
+    -fx-border-width: 2 2 2 2;
+    -fx-border-color: #c0c0c0;
+    -fx-border-style: solid;
+    -fx-border-radius: 1em;
+}
