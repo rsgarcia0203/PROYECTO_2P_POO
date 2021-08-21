@@ -8,7 +8,6 @@ package ec.edu.espol.controller;
 import ec.edu.espol.model.Comprador;
 import ec.edu.espol.model.PasswordException;
 import ec.edu.espol.model.UserException;
-import ec.edu.espol.model.Vendedor;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
