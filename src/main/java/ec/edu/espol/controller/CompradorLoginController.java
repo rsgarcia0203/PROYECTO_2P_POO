@@ -30,7 +30,7 @@ import javafx.scene.input.MouseEvent;
  *
  * @author rsgar
  */
-public class compradorLoginController implements Initializable {
+public class CompradorLoginController implements Initializable {
 
     @FXML
     private ImageView btn_home;
