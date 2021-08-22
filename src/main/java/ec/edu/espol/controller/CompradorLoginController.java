@@ -33,8 +33,6 @@ import javafx.scene.input.MouseEvent;
 public class CompradorLoginController implements Initializable {
 
     @FXML
-    private ImageView btn_home;
-    @FXML
     private TextField correo;
     @FXML
     private Button btn_ingreso;
