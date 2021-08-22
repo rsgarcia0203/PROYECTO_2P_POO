@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import javafx.scene.control.Alert;
 
 /**
  *
@@ -163,25 +164,16 @@ public class Vendedor {
         return "Vendedor<" + this.ID + ">{Nombres=" + this.nombres + ", Apellidos=" + this.apellidos + ", Organizacion=" + this.organizacion + ", Correo=" + this.correo + ", Clave=" + this.clave + "}";
     }
 
-    public static void registrarNuevoVendedor(Scanner sc, ArrayList<Vendedor> vendedores, String nomfile) {
-        System.out.println("\n=REGISTRAR=");
-        int id = Util.nextID(nomfile);
-        System.out.println("Ingrese los nombres: ");
-        String nombres = sc.next();
-        System.out.println("Ingrese los apellidos: ");
-        String apellidos = sc.next();
-        System.out.println("Ingrese el nombre de la organización: ");
-        String organizacion = sc.next();
-        System.out.println("Ingrese su dirección de correo electrónico: ");
-        String correo = sc.next();
-        System.out.println("Ingrese su clave: ");
-        String clave = sc.next();
-        Vendedor nuevo = new Vendedor(id, nombres, apellidos, organizacion, correo, clave);
-        if (vendedores.contains(nuevo) == false) {
-            nuevo.saveFile(nomfile);
-            System.out.println("Vendedor registrado!");
+    
+    public static void registrarNuevoVendedor(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Vendedor> vendedores, String nomfile) throws VendedorException{
+        int id = Util.nextID(nomfile); 
+        Vendedor v = new Vendedor(id, nombres, apellidos, organizacion, correo, clave);
+        if (vendedores.contains(v) == false) {
+            v.saveFile(nomfile);
+            Alert a = new Alert(Alert.AlertType.INFORMATION, "Usuario registrado.");
+            a.show();
         } else {
-            System.out.println("Vendedor repetido, no se puede registrar!");
+            throw new VendedorException("");
         }
 
     }

@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import javafx.scene.control.Alert;
 
 /**
  *
@@ -144,25 +145,15 @@ public class Comprador {
         return "Comprador<" + this.ID + ">{Nombres=" + this.nombres + ", Apellidos=" + this.apellidos + ", Organizacion=" + this.organizacion + ", Correo=" + this.correo + ", Clave=" + this.clave + "}";
     }
 
-    public static void registrarNuevoComprador(Scanner sc, ArrayList<Comprador> compradores, String nomfile) {
-        System.out.println("\n=REGISTRAR=");
-        int id = Util.nextID(nomfile);
-        System.out.println("Ingrese los nombres: ");
-        String nombres = sc.next();
-        System.out.println("Ingrese los apellidos: ");
-        String apellidos = sc.next();
-        System.out.println("Ingrese el nombre de la organización: ");
-        String organizacion = sc.next();
-        System.out.println("Ingrese su dirección de correo electrónico: ");
-        String correo = sc.next();
-        System.out.println("Ingrese su clave: ");
-        String clave = sc.next();
+    public static void registrarNuevoComprador(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Comprador> compradores, String nomfile) throws CompradorException{
+        int id = Util.nextID(nomfile); 
         Comprador c = new Comprador(id, nombres, apellidos, organizacion, correo, clave);
         if (compradores.contains(c) == false) {
             c.saveFile(nomfile);
-            System.out.println("Comprador registrado!");
+            Alert a = new Alert(Alert.AlertType.INFORMATION, "Usuario registrado.");
+            a.show();
         } else {
-            System.out.println("Comprador repetido, no se puede registrar!");
+            throw new CompradorException("");
         }
 
     }
