@@ -8,20 +8,21 @@ package ec.edu.espol.controller;
 import ec.edu.espol.model.PasswordException;
 import ec.edu.espol.model.UserException;
 import ec.edu.espol.model.Vendedor;
+import ec.edu.espol.proyecto2p.App;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 
 /**
  * FXML Controller class
@@ -31,8 +32,6 @@ import javafx.scene.layout.GridPane;
 public class vendedorLoginController implements Initializable {
 
     @FXML
-    private GridPane gpane;
-    @FXML
     private Button btn_ingreso;
     @FXML
     private Button btn_registro;
@@ -41,7 +40,6 @@ public class vendedorLoginController implements Initializable {
     @FXML
     private PasswordField contra;
     @FXML
-    private ImageView btn_home;
 
     private ArrayList<Vendedor> vendedores;
 
@@ -93,10 +91,14 @@ public class vendedorLoginController implements Initializable {
 
     @FXML
     private void register(MouseEvent event) {
+        try {
+                FXMLLoader fxmlloader = App.loadFXMLoader("vendedorRegister");
+                App.setRoot(fxmlloader);
+                VendedorRegisterController vrc = fxmlloader.getController();             
+                vrc.setVendedores(vendedores);
+            } catch (IOException ex) {
+                Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo del siguiente grafo de scene");
+                a.show();
+            }
     }
-
-    @FXML
-    private void menuPrincipal(MouseEvent event) {
-    }
-
 }
