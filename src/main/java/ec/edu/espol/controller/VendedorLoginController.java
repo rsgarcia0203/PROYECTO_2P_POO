@@ -29,7 +29,7 @@ import javafx.scene.input.MouseEvent;
  *
  * @author rsgar
  */
-public class vendedorLoginController implements Initializable {
+public class VendedorLoginController implements Initializable {
 
     @FXML
     private Button btn_ingreso;
