@@ -64,7 +64,7 @@ public class VentanaController implements Initializable {
         try {
             FXMLLoader fxmlloader = App.loadFXMLoader("vendedorLogin");
             App.setRoot(fxmlloader);
-            VendedorLoginController vlc = fxmlloader.getController();
+            //VendedorLoginController vlc = fxmlloader.getController();
             
 
         } catch (IOException ex) {

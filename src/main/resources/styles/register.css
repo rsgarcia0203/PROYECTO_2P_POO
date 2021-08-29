@@ -32,6 +32,7 @@ and open the template in the editor.
     -fx-background-color:transparent;
     -fx-border-color:#ffffff;
     -fx-border-width: 0px 0px 1px 0px;
+    -fx-text-fill: #ffffff;
 }
 
 .tf{

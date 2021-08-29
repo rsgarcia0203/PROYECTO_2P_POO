@@ -5,6 +5,7 @@
  */
 package ec.edu.espol.controller;
 
+import ec.edu.espol.model.Comprador;
 import ec.edu.espol.model.PasswordException;
 import ec.edu.espol.model.UserException;
 import ec.edu.espol.model.Vendedor;
@@ -29,30 +30,28 @@ import javafx.scene.input.MouseEvent;
  *
  * @author rsgar
  */
-public class VendedorLoginController implements Initializable {
+public class LoginController implements Initializable {
 
+    @FXML
+    private TextField correo;
     @FXML
     private Button btn_ingreso;
     @FXML
     private Button btn_registro;
     @FXML
-    private TextField correo;
-    @FXML
     private PasswordField contra;
-    @FXML
 
+    private ArrayList<Comprador> compradores;
     private ArrayList<Vendedor> vendedores;
 
     /**
      * Initializes the controller class.
-     *
-     * @param url
-     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try{
-            this.vendedores = Vendedor.readFile("vendedor.txt");
+        try {
+            this.compradores = Comprador.readFile("src\\main\\resources\\doc\\comprador.txt");
+            this.vendedores = Vendedor.readFile("src\\main\\resources\\doc\\vendedor.txt");
         } catch (FileNotFoundException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "Documento no encontrado.");
             a.show();
@@ -63,15 +62,28 @@ public class VendedorLoginController implements Initializable {
     private void login(MouseEvent event) {
         String user = correo.getText();
         String pass = contra.getText();
-        if (user.equals("") || contra.equals("")) {
+        if (user.equals("") || pass.equals("")) {
             Alert a = new Alert(Alert.AlertType.WARNING, "Debe llenar todos los campos.");
             a.show();
         } else {
             try {
-                boolean validar = Vendedor.validarUsuario(user, pass, this.vendedores);
-                if (validar == true) {
+                boolean validarComprador = Comprador.validarUsuario(user, pass, this.compradores);
+                boolean validarVendedor = Vendedor.validarUsuario(user, pass, this.vendedores);
+                if (validarComprador == true && validarVendedor == true) {
                     Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
                     a.show();
+                    FXMLLoader fxmlloader = App.loadFXMLoader("ventana");
+                    App.setRoot(fxmlloader);
+                } else if (validarComprador == true) {
+                    Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
+                    a.show();
+                    FXMLLoader fxmlloader = App.loadFXMLoader("ventana");
+                    App.setRoot(fxmlloader);
+                } else if (validarVendedor == true) {
+                    Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
+                    a.show();
+                    FXMLLoader fxmlloader = App.loadFXMLoader("ventana");
+                    App.setRoot(fxmlloader);
                 } else {
                     Alert a = new Alert(Alert.AlertType.ERROR, "Usuario no registrado.");
                     a.show();
@@ -85,6 +97,9 @@ public class VendedorLoginController implements Initializable {
             } catch (NoSuchAlgorithmException ex) {
                 Alert a = new Alert(Alert.AlertType.ERROR, "Error de clave.");
                 a.show();
+            } catch (IOException ex) {
+                Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo del siguiente grafo de scene");
+                a.show();
             }
         }
     }
@@ -92,13 +107,15 @@ public class VendedorLoginController implements Initializable {
     @FXML
     private void register(MouseEvent event) {
         try {
-                FXMLLoader fxmlloader = App.loadFXMLoader("vendedorRegister");
-                App.setRoot(fxmlloader);
-                VendedorRegisterController vrc = fxmlloader.getController();             
-                vrc.setVendedores(vendedores);
-            } catch (IOException ex) {
-                Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo del siguiente grafo de scene");
-                a.show();
-            }
+            FXMLLoader fxmlloader = App.loadFXMLoader("Register");
+            App.setRoot(fxmlloader);
+            RegisterController rc = fxmlloader.getController();
+            rc.setCompradores(compradores);
+            rc.setVendedores(vendedores);
+        } catch (IOException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo del siguiente grafo de scene");
+            a.show();
+        }
     }
+
 }
