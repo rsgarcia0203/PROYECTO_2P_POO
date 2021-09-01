@@ -1,4 +1,2 @@
 1|Mathias|Zambrano|MARIAESCRIVA|mathiaszamb@hotmail.com|d95e6a490724e4abcebfed279fbdddae2bd5927dbc3c88f32f3efc1bfb9c544f
-2|Ronny|Garcia|ESPOL|rsgarcia@espol.edu.ec|a1c5e4ce8dbe91ec35a98f46e599463582defb8ea7b778db4408d1b9787881ac
-3|Ronny Steven|Garcia Zambrano|ESPOL|rgarcia@espol.edu.ec|bcda6abbaa179d5c9657e4d086c27a64fee019eb1cda73fc043901edbc5bab4c
-4|Steven|Zambrano|YACHAY|zambranos@yachay.edu.ec|8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92
+2|Ronny Steven|Garcia Zambrano|ESPOL|rsgarcia@espol.edu.ec|ca022c1bed97565c3c62f4369155a6f2d6d1744592b6f40bd742bb2358f87b78

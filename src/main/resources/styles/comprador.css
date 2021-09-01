@@ -2,6 +2,93 @@
  * Empty Stylesheet file.
  */
 
-.mainFxmlClass {
+.root {
+    -fx-background-color:linear-gradient(#151928,#2196f3);
+    -fx-border-color:#ffffff;
+    
+}  
 
+
+.label{
+   -fx-font-size:30;
+   -fx-text-fill: #ffffff;
+}
+
+.button{
+    /*-fx-background-color:linear-gradient(#dc9656,#ab4642);*/
+    -fx-background-color:#2196f3;
+    -fx-text-fill:#dcdcdc;
+    -fx-background-radius: 6em;
+    -fx-font-size:30;
+    -fx-text-fill: #ffffff;
+}
+
+.button:hover{
+    -fx-background-color:#5db6ff;
+}
+
+.button:pressed{
+    -fx-background-color:#104f7c;
+}
+
+.tf_box{
+    -fx-background-color:transparent;
+    -fx-border-color:#ffffff;
+    -fx-font-size:30;
+    -fx-border-width: 0px 0px 1px 0px;
+    -fx-text-fill: #ffffff;
+}
+
+.tf{
+    -fx-background-color:transparent;
+}
+
+.tab{
+    -fx-background-color:#5db6ff;
+    -fx-font-size:18;
+    -fx-text-fill: #ffffff;
+    -fx-border-color:#ffffff;
+    -fx-border-bottom-left-radius: 6em;
+    -fx-border-width: 0px 0px 0px 0px;
+}
+
+.tab:hover{
+    -fx-background-color:#2196f3;
+}
+
+.tab:pressed{
+    -fx-background-color: #104f7c;
+}
+
+.tab:selected{
+    -fx-background-color:#2196f3;
+}
+
+.table{
+    -fx-font-size:18;
+    -fx-text-fill: #ffffff;
+}
+
+.table_txt{
+    -fx-font-size:18;
+    -fx-text-fill: #ffffff;
+}
+
+.rbutton{
+    -fx-font-size:30;
+}
+
+.btn2{
+    -fx-background-color:linear-gradient(#dc9656,#ab4642);
+    -fx-background-radius: 6em;
+    -fx-font-size:30;
+    -fx-text-fill: #ffffff;   
+}
+
+.btn2:hover{
+    -fx-background-color:#dc9656;
+}
+
+.btn2:pressed{
+    -fx-background-color:#903c3a;
 }

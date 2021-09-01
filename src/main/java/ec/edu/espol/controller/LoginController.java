@@ -67,18 +67,22 @@ public class LoginController implements Initializable {
             a.show();
         } else {
             try {
-                boolean validarComprador = Comprador.validarUsuario(user, pass, this.compradores);
-                boolean validarVendedor = Vendedor.validarUsuario(user, pass, this.vendedores);
-                if (validarComprador == true && validarVendedor == true) {
+                Comprador validarComprador = Comprador.validarUsuario(user, pass, this.compradores);
+                boolean validarVendedor = false;//Vendedor.validarUsuario(user, pass, this.vendedores);
+                if (validarComprador != null && validarVendedor == true) {
                     Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
                     a.show();
                     FXMLLoader fxmlloader = App.loadFXMLoader("ventana");
                     App.setRoot(fxmlloader);
-                } else if (validarComprador == true) {
+                } else if (validarComprador != null) {
                     Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
                     a.show();
-                    FXMLLoader fxmlloader = App.loadFXMLoader("ventana");
+                    FXMLLoader fxmlloader = App.loadFXMLoader("Comprador");
                     App.setRoot(fxmlloader);
+                    CompradorController cc = fxmlloader.getController();
+                    cc.setComprador(validarComprador);
+                    cc.setCompradores(compradores);
+                    cc.setVendedores(vendedores);
                 } else if (validarVendedor == true) {
                     Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
                     a.show();

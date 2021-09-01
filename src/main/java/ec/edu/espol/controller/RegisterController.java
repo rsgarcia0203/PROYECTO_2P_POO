@@ -7,16 +7,22 @@ package ec.edu.espol.controller;
 
 import ec.edu.espol.model.Comprador;
 import ec.edu.espol.model.CompradorException;
+import ec.edu.espol.model.PasswordException;
+import ec.edu.espol.model.UserException;
 import ec.edu.espol.model.Vendedor;
+import ec.edu.espol.model.VendedorException;
 import ec.edu.espol.proyecto2p.App;
 import java.io.IOException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -68,6 +74,24 @@ public class RegisterController implements Initializable {
         this.vendedores = vendedores;
     }
 
+    public void toMain() {
+        try {
+            FXMLLoader fxmlloader = App.loadFXMLoader("Login");
+            App.setRoot(fxmlloader);
+        } catch (IOException ex) {
+            Alert a3 = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo del siguiente grafo de scene");
+            a3.show();
+        }
+    }
+
+    public boolean resultado() {
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Está seguro que desea registrarse con esos datos?");
+        a.setTitle("SYSTEM-POO");
+        a.setHeaderText("Confirmación de datos de registro");
+        Optional<ButtonType> resultado = a.showAndWait();
+        return resultado.isPresent() && resultado.get() == ButtonType.OK;
+    }
+
     @FXML
     private void registrar(MouseEvent event) {
         String nom = nombres.getText();
@@ -80,35 +104,43 @@ public class RegisterController implements Initializable {
             a.show();
         } else {
             try {
-                if (tipo.getSelectedToggle() == rb_comprador) {
-                    Comprador.registrarNuevoComprador(nom, ape, org, cor, pas, this.compradores, "src\\main\\resources\\doc\\comprador.txt");
-                } else if (tipo.getSelectedToggle() == rb_vendedor) {
-                    Vendedor.registrarNuevoVendedor(nom, ape, org, cor, pas, this.vendedores, "src\\main\\resources\\doc\\vendedor.txt");
-                } else if (tipo.getSelectedToggle() == rb_ambos) {
-                    Comprador.registrarNuevoComprador(nom, ape, org, cor, pas, this.compradores, "src\\main\\resources\\doc\\comprador.txt");
-                    Vendedor.registrarNuevoVendedor(nom, ape, org, cor, pas, this.vendedores, "src\\main\\resources\\doc\\vendedor.txt");
-                }
-                FXMLLoader fxmlloader = App.loadFXMLoader("Login");
-                App.setRoot(fxmlloader);
-            } catch (CompradorException ex) {
+                if (Comprador.validarRegistro(cor, compradores) == true) {
+                    if (tipo.getSelectedToggle() == rb_comprador) {
+                        if (resultado() == true) {
+                            Comprador.registrarNuevoComprador(nom, ape, org, cor, pas, this.compradores, "src\\main\\resources\\doc\\comprador.txt");
+                            toMain();
+                        }
+                    } else if (tipo.getSelectedToggle() == rb_vendedor) {
+                        if (resultado() == true) {
+                            Vendedor.registrarNuevoVendedor(nom, ape, org, cor, pas, this.vendedores, "src\\main\\resources\\doc\\vendedor.txt");
+                            toMain();
+                        }
+                    } else if (tipo.getSelectedToggle() == rb_ambos) {
+                        if (resultado() == true) {
+                            Comprador.registrarNuevoComprador(nom, ape, org, cor, pas, this.compradores, "src\\main\\resources\\doc\\comprador.txt");
+                            Vendedor.registrarNuevoVendedor(nom, ape, org, cor, pas, this.vendedores, "src\\main\\resources\\doc\\vendedor.txt");
+                            toMain();
+                        }
+                    } else {
+                        Alert a = new Alert(Alert.AlertType.ERROR, "Debe seleccionar un rol para poder registrarse.");
+                        a.setTitle("SYSTEM-POO");
+                        a.setHeaderText("ERROR");
+                        a.show();
+                    }
+                } 
+            } catch (UserException | NoSuchAlgorithmException ex) {
                 Alert a = new Alert(Alert.AlertType.ERROR, "Correo registrado anteriormente.");
-                a.show();
-            } catch (IOException ex) {
-                Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo del siguiente grafo de scene");
+                a.setTitle("SYSTEM-POO");
+                a.setHeaderText("ERROR");
                 a.show();
             }
+
         }
     }
 
     @FXML
     private void back(MouseEvent event) {
-        try {
-            FXMLLoader fxmlloader = App.loadFXMLoader("Login");
-            App.setRoot(fxmlloader);
-        } catch (IOException ex) {
-            Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo del siguiente grafo de scene");
-            a.show();
-        }
+        toMain();
     }
 
 }

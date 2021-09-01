@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
@@ -13,179 +14,183 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" styleClass="root" stylesheets="@../../../../styles/register.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ec.edu.espol.controller.RegisterController">
-   <children>
-      <ImageView fitHeight="128.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../img/register.png" />
-         </image>
-         <VBox.margin>
-            <Insets left="65.0" top="20.0" />
-         </VBox.margin>
-      </ImageView>
-      <Label text="Únete" textFill="#2196f3">
-         <font>
-            <Font name="Open Sans SemiBold" size="40.0" />
-         </font>
-         <VBox.margin>
-            <Insets left="55.0" top="20.0" />
-         </VBox.margin>
-      </Label>
-      <HBox alignment="CENTER" prefHeight="65.0" prefWidth="725.0">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="ec.edu.espol.controller.RegisterController">
+   <content>
+      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1265.0" styleClass="root" stylesheets="@../../../../styles/register.css">
          <children>
-            <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="128.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../img/usuario.png" />
+                  <Image url="@../../../../img/register.png" />
                </image>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
+               <VBox.margin>
+                  <Insets left="65.0" top="40.0" />
+               </VBox.margin>
             </ImageView>
-            <TextField fx:id="nombres" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="560.0" promptText="Nombres" styleClass="tf_box">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </TextField>
-         </children>
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER" prefHeight="65.0" prefWidth="725.0">
-         <children>
-            <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../img/usuario.png" />
-               </image>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </ImageView>
-            <TextField fx:id="apellidos" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="560.0" promptText="Apellidos" styleClass="tf_box">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </TextField>
-         </children>
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER" prefHeight="65.0" prefWidth="725.0">
-         <children>
-            <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../img/empresa.png" />
-               </image>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </ImageView>
-            <TextField fx:id="organizacion" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="560.0" promptText="Organización" styleClass="tf_box">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </TextField>
-         </children>
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER" prefHeight="65.0" prefWidth="725.0">
-         <children>
-            <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../img/message_mail_envelope_icon_191643.png" />
-               </image>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </ImageView>
-            <TextField fx:id="correo" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="560.0" promptText="Correo" styleClass="tf_box">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </TextField>
-         </children>
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER" prefHeight="67.0" prefWidth="720.0">
-         <children>
-            <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../img/contraseña.png" />
-               </image>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </ImageView>
-            <PasswordField fx:id="contra" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="560.0" promptText="Contraseña" styleClass="tf_box" />
-         </children>
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
-         <children>
-            <RadioButton fx:id="rb_comprador" mnemonicParsing="false" text="Comprador" textFill="#bcbcbc">
-               <padding>
-                  <Insets right="10.0" />
-               </padding>
-               <toggleGroup>
-                  <ToggleGroup fx:id="tipo" />
-               </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="rb_vendedor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="191.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="50.0" text="Vendedor" textFill="#bcbcbc" toggleGroup="$tipo" />
-            <RadioButton fx:id="rb_ambos" contentDisplay="TOP" mnemonicParsing="false" text="Ambos" textFill="#bcbcbc" toggleGroup="$tipo">
-               <padding>
-                  <Insets right="10.0" />
-               </padding>
-            </RadioButton>
-         </children>
-         <VBox.margin>
-            <Insets top="30.0" />
-         </VBox.margin>
-      </HBox>
-      <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#registrar" prefHeight="50.0" prefWidth="600.0" text="Registrarse">
-         <font>
-            <Font name="Open Sans SemiBold" size="30.0" />
-         </font>
-         <padding>
-            <Insets bottom="2.0" />
-         </padding>
-         <VBox.margin>
-            <Insets bottom="30.0" top="40.0" />
-         </VBox.margin>
-      </Button>
-      <HBox prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#back" prefHeight="50.0" prefWidth="50.0">
-               <graphic>
-                  <ImageView fitHeight="35.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+            <Label text="Únete" textFill="#2196f3">
+               <font>
+                  <Font name="Open Sans SemiBold" size="40.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="55.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <HBox alignment="CENTER" prefHeight="65.0" prefWidth="725.0">
+               <children>
+                  <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../img/point_left_arrow_icon_191651.png" />
+                        <Image url="@../../../../img/usuario.png" />
                      </image>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
                   </ImageView>
-               </graphic>
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
+                  <TextField fx:id="nombres" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="560.0" promptText="Nombres" styleClass="tf_box">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="65.0" prefWidth="725.0">
+               <children>
+                  <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../img/usuario.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </ImageView>
+                  <TextField fx:id="apellidos" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="560.0" promptText="Apellidos" styleClass="tf_box">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="65.0" prefWidth="725.0">
+               <children>
+                  <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../img/empresa.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </ImageView>
+                  <TextField fx:id="organizacion" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="560.0" promptText="Organización" styleClass="tf_box">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="65.0" prefWidth="725.0">
+               <children>
+                  <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../img/message_mail_envelope_icon_191643.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </ImageView>
+                  <TextField fx:id="correo" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="560.0" promptText="Correo" styleClass="tf_box">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="67.0" prefWidth="720.0">
+               <children>
+                  <ImageView fitHeight="60.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../img/contraseña.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </ImageView>
+                  <PasswordField fx:id="contra" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="560.0" promptText="Contraseña" styleClass="tf_box" />
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <RadioButton fx:id="rb_comprador" mnemonicParsing="false" text="Comprador" textFill="#bcbcbc">
+                     <padding>
+                        <Insets right="10.0" />
+                     </padding>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tipo" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="rb_vendedor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="191.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="50.0" text="Vendedor" textFill="#bcbcbc" toggleGroup="$tipo" />
+                  <RadioButton fx:id="rb_ambos" contentDisplay="TOP" mnemonicParsing="false" text="Ambos" textFill="#bcbcbc" toggleGroup="$tipo">
+                     <padding>
+                        <Insets right="10.0" />
+                     </padding>
+                  </RadioButton>
+               </children>
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </HBox>
+            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#registrar" prefHeight="50.0" prefWidth="600.0" text="Registrarse">
+               <font>
+                  <Font name="Open Sans SemiBold" size="30.0" />
+               </font>
+               <padding>
+                  <Insets bottom="2.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets bottom="30.0" top="40.0" />
+               </VBox.margin>
             </Button>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#back" prefHeight="50.0" prefWidth="50.0">
+                     <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../img/point_left_arrow_icon_191651.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
          </children>
-      </HBox>
-   </children>
-</VBox>
+      </VBox>
+   </content>
+</ScrollPane>

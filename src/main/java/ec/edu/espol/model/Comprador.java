@@ -9,6 +9,7 @@ import ec.edu.espol.util.Util;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -107,9 +108,10 @@ public class Comprador {
         return comprador;
     }
     
-    public static boolean validarUsuario(String correo, String clave, ArrayList<Comprador> compradores) throws PasswordException, UserException, NoSuchAlgorithmException{
+    public static Comprador validarUsuario(String correo, String clave, ArrayList<Comprador> compradores) throws PasswordException, UserException, NoSuchAlgorithmException{
         boolean validarcorreo = false;
         boolean validarclave = false;
+        Comprador comprador = null;
         for (int i = 0; i < compradores.size(); i++) {
             String clave_i = compradores.get(i).getClave();//clave del comprador que estamos tomando
             String correo_i = compradores.get(i).getCorreo();//correo del comprador que estamos tomando            
@@ -117,12 +119,13 @@ public class Comprador {
                 validarcorreo = true;
                 if (clave_i.equals(Util.toHexString(Util.getSHA(clave)))){
                     validarclave = true;
+                    comprador = compradores.get(i);
                 } 
             } 
         }
         if(validarcorreo == true){
             if(validarclave == true){
-                return true;
+                return comprador;
             } else {
                 throw new PasswordException("PasswordException");
             }
@@ -130,7 +133,19 @@ public class Comprador {
             throw new UserException("UserException");
         }
     }
-
+    
+    public static boolean validarRegistro(String correo, ArrayList<Comprador> compradores) throws  UserException, NoSuchAlgorithmException{
+        for (int i = 0; i < compradores.size(); i++) {
+            String correo_i = compradores.get(i).getCorreo();//correo del comprador que estamos tomando            
+            if (correo_i.equals(correo)) {
+                return true;
+            } else {
+                throw new UserException("UserException");
+            }
+        }
+        return false;
+    }
+    
     public static Comprador searchByID(ArrayList<Comprador> compradores, int id) {
         for (Comprador c : compradores) {
             if (c.ID == id) {
@@ -144,14 +159,29 @@ public class Comprador {
     public String toString() {
         return "Comprador<" + this.ID + ">{Nombres=" + this.nombres + ", Apellidos=" + this.apellidos + ", Organizacion=" + this.organizacion + ", Correo=" + this.correo + ", Clave=" + this.clave + "}";
     }
+    
+    public static void eliminarComprador(ArrayList<Comprador> compradores, Comprador comprador) throws IOException
+    {
+        for(int i = 0; i < compradores.size(); i++)
+        {
+            if (compradores.get(i).equals(comprador))
+            {
+                compradores.remove(i);
+            }
+        }
+        Util.limpiarArchivo("comprador.txt");
+        for(Comprador c: compradores)
+        {
+            c.saveFile("comprador.txt");
+        }
+    }      
 
+    
     public static void registrarNuevoComprador(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Comprador> compradores, String nomfile) throws CompradorException{
         int id = Util.nextID(nomfile); 
         Comprador c = new Comprador(id, nombres, apellidos, organizacion, correo, clave);
         if (compradores.contains(c) == false) {
             c.saveFile(nomfile);
-            Alert a = new Alert(Alert.AlertType.INFORMATION, "Usuario registrado.");
-            a.show();
         } else {
             throw new CompradorException("");
         }
