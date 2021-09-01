@@ -138,9 +138,9 @@ public class Comprador {
         for (int i = 0; i < compradores.size(); i++) {
             String correo_i = compradores.get(i).getCorreo();//correo del comprador que estamos tomando            
             if (correo_i.equals(correo)) {
-                return true;
-            } else {
                 throw new UserException("UserException");
+            } else {
+              return true;
             }
         }
         return false;
