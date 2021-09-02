@@ -166,9 +166,7 @@ public class Vendedor {
             String correo_i = vendedores.get(i).getCorreo();//correo del comprador que estamos tomando            
             if (correo_i.equals(correo)) {
                 throw new UserException("UserException");
-            } else {
-                return false;
-            }
+            } 
         }
         return false;
     }
