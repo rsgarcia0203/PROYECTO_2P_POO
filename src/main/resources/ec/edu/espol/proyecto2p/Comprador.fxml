@@ -32,23 +32,20 @@
                      <center>
                         <TableView fx:id="tableOfertas" prefHeight="200.0" prefWidth="200.0" styleClass="table" BorderPane.alignment="CENTER">
                           <columns>
-                            <TableColumn fx:id="id_column" prefWidth="45.0" styleClass="table_txt" text="ID" />
-                            <TableColumn fx:id="placas_column" prefWidth="118.0" styleClass="table_txt" text="PLACAS" />
-                              <TableColumn fx:id="marca_column" prefWidth="152.0" styleClass="table_txt" text="MARCA" />
-                              <TableColumn fx:id="modelo_column" prefWidth="75.0" styleClass="table_txt" text="MODELO" />
-                              <TableColumn fx:id="motor_column" prefWidth="75.0" styleClass="table_txt" text="MOTOR" />
-                              <TableColumn fx:id="anio_column" prefWidth="75.0" styleClass="table_txt" text="AÑO" />
-                              <TableColumn fx:id="recorrido_column" prefWidth="75.0" styleClass="table_txt" text="RECORRIDO" />
-                              <TableColumn fx:id="color_column" prefWidth="75.0" styleClass="table_txt" text="COLOR" />
-                              <TableColumn fx:id="combustible_column" prefWidth="75.0" styleClass="table_txt" text="COMBUSTIBLE" />
-                              <TableColumn fx:id="vidrios_column" prefWidth="75.0" styleClass="table_txt" text="VIDRIOS" />
-                              <TableColumn fx:id="transmision_column" prefWidth="75.0" styleClass="table_txt" text="TRANSMISIÓN" />
+                            <TableColumn fx:id="id_column" prefWidth="32.0" styleClass="table_txt" text="ID" />
+                            <TableColumn fx:id="placas_column" prefWidth="73.0" styleClass="table_txt" text="PLACAS" />
+                              <TableColumn fx:id="marca_column" prefWidth="109.0" styleClass="table_txt" text="MARCA" />
+                              <TableColumn fx:id="modelo_column" prefWidth="128.0" styleClass="table_txt" text="MODELO" />
+                              <TableColumn fx:id="motor_column" prefWidth="114.0" styleClass="table_txt" text="MOTOR" />
+                              <TableColumn fx:id="anio_column" prefWidth="52.0" styleClass="table_txt" text="AÑO" />
+                              <TableColumn fx:id="recorrido_column" prefWidth="86.0" styleClass="table_txt" text="RECORRIDO" />
+                              <TableColumn fx:id="color_column" prefWidth="66.0" styleClass="table_txt" text="COLOR" />
+                              <TableColumn fx:id="combustible_column" prefWidth="91.0" styleClass="table_txt" text="COMBUSTIBLE" />
+                              <TableColumn fx:id="vidrios_column" prefWidth="70.0" styleClass="table_txt" text="VIDRIOS" />
+                              <TableColumn fx:id="transmision_column" prefWidth="97.0" styleClass="table_txt" text="TRANSMISIÓN" />
                               <TableColumn fx:id="traccion_column" prefWidth="75.0" styleClass="table_txt" text="TRACCIÓN" />
-                              <TableColumn fx:id="precio_column" prefWidth="75.0" styleClass="table_txt" text="PRECIO" />
+                              <TableColumn fx:id="precio_column" prefWidth="86.0" styleClass="table_txt" text="PRECIO" />
                           </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
                         </TableView>
                      </center>
                      <top>
@@ -93,22 +90,22 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Correo:" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                              <Label styleClass="lbl" text="Correo:" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                                  <font>
                                     <Font name="Open Sans SemiBold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER" contentDisplay="CENTER" text="Nombres:" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                              <Label alignment="CENTER" contentDisplay="CENTER" styleClass="lbl" text="Nombres:" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                  <font>
                                     <Font name="Open Sans SemiBold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER" contentDisplay="CENTER" text="Apellidos:" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                              <Label alignment="CENTER" contentDisplay="CENTER" styleClass="lbl" text="Apellidos:" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                  <font>
                                     <Font name="Open Sans SemiBold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER" contentDisplay="CENTER" text="Organización:" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                              <Label alignment="CENTER" contentDisplay="CENTER" styleClass="lbl" text="Organización:" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                                  <font>
                                     <Font name="Open Sans SemiBold" size="12.0" />
                                  </font>
@@ -190,13 +187,13 @@
                                     <RowConstraints maxHeight="101.0" minHeight="10.0" prefHeight="94.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" text="Contraseña actual:">
+                                    <Label alignment="CENTER" contentDisplay="CENTER" styleClass="lbl" text="Contraseña actual:">
                                        <font>
                                           <Font name="Open Sans SemiBold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <Label text="Contraseña nueva:" GridPane.rowIndex="1" />
-                                    <Label text="Confirme la nueva contraseña:" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                                    <Label styleClass="lbl" text="Contraseña nueva:" GridPane.rowIndex="1" />
+                                    <Label styleClass="lbl" text="Confirme la nueva contraseña:" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                                     <PasswordField fx:id="txt_clave" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="300.0" styleClass="tf_box" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                                     <PasswordField fx:id="txt_clave_nueva" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="300.0" styleClass="tf_box" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                                     <PasswordField fx:id="txt_clave_confirmacion" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="300.0" styleClass="tf_box" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />

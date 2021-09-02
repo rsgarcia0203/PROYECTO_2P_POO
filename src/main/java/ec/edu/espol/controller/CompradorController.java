@@ -116,30 +116,7 @@ public class CompradorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //Eliminar essto para poder cargar la ventana
-        ArrayList<Vehiculo> vehiculos = new ArrayList<>();
-        ArrayList<Automovil> automoviles = Automovil.readFile("src\\main\\resources\\doc\\automovil.txt");
-        ArrayList<Camioneta> camionetas = Camioneta.readFile("src\\main\\resources\\doc\\camioneta.txt");
-        ArrayList<Motocicleta> motocicletas = Motocicleta.readFile("src\\main\\resources\\doc\\motocicleta.txt"); 
-        ArrayList<Ingreso> ingresos = Ingreso.readFile("src\\main\\resources\\doc\\ingreso.txt");
-        ArrayList<Oferta> ofertas = Oferta.readFile("src\\main\\resources\\doc\\oferta.txt");
-        Oferta.link(compradores, automoviles, camionetas, motocicletas, ofertas);
-        Ingreso.link(vendedores, vehiculos, automoviles, camionetas, motocicletas, ingresos); 
-        System.out.println(vehiculos);
-        ObservableList<Vehiculo> vehiculosList = FXCollections.observableArrayList(vehiculos);
-        id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        placas_column.setCellValueFactory(new PropertyValueFactory<>("placa"));
-        marca_column.setCellValueFactory(new PropertyValueFactory<>("marca"));
-        modelo_column.setCellValueFactory(new PropertyValueFactory<>("modelo"));
-        motor_column.setCellValueFactory(new PropertyValueFactory<>("tipo_motor"));
-        anio_column.setCellValueFactory(new PropertyValueFactory<>("año"));
-        recorrido_column.setCellValueFactory(new PropertyValueFactory<>("recorrido"));
-        color_column.setCellValueFactory(new PropertyValueFactory<>("color"));
-        combustible_column.setCellValueFactory(new PropertyValueFactory<>("tipo_combustible"));
-        vidrios_column.setCellValueFactory(new PropertyValueFactory<>("vidrios"));
-        transmision_column.setCellValueFactory(new PropertyValueFactory<>("transmision"));
-        traccion_column.setCellValueFactory(new PropertyValueFactory<>("traccion"));
-        precio_column.setCellValueFactory(new PropertyValueFactory<>("precio"));
-        tableOfertas.setItems(vehiculosList);
+        
     }
 
     public void setComprador(Comprador comprador) {

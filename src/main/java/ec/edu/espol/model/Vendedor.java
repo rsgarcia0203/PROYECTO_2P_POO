@@ -135,28 +135,42 @@ public class Vendedor {
         }
         return null;
     }
-    public static boolean validarUsuario(String correo, String clave, ArrayList<Vendedor> vendedores) throws PasswordException, UserException, NoSuchAlgorithmException{
-        boolean validarcorreo = false;
+    public static Vendedor validarUsuario(String correo, String clave, ArrayList<Vendedor> vendedores) throws PasswordException, UserException, NoSuchAlgorithmException{
+         boolean validarcorreo = false;
         boolean validarclave = false;
+        Vendedor vendedor = null;
         for (int i = 0; i < vendedores.size(); i++) {
-            String clave_i = vendedores.get(i).getClave();//clave del vendedor que estamos tomando
-            String correo_i = vendedores.get(i).getCorreo();//correo del vendedor que estamos tomando            
+            String clave_i = vendedores.get(i).getClave();//clave del comprador que estamos tomando
+            String correo_i = vendedores.get(i).getCorreo();//correo del comprador que estamos tomando            
             if (correo_i.equals(correo)) {
                 validarcorreo = true;
                 if (clave_i.equals(Util.toHexString(Util.getSHA(clave)))){
                     validarclave = true;
+                    vendedor = vendedores.get(i);
                 } 
             } 
         }
         if(validarcorreo == true){
             if(validarclave == true){
-                return true;
+                return vendedor;
             } else {
                 throw new PasswordException("PasswordException");
             }
         } else {
             throw new UserException("UserException");
         }
+    }
+    
+    public static boolean validarRegistro(String correo, ArrayList<Vendedor> vendedores) throws  UserException, NoSuchAlgorithmException{
+        for (int i = 0; i < vendedores.size(); i++) {
+            String correo_i = vendedores.get(i).getCorreo();//correo del comprador que estamos tomando            
+            if (correo_i.equals(correo)) {
+                throw new UserException("UserException");
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
     
     @Override

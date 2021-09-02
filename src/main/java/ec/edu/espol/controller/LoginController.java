@@ -68,11 +68,11 @@ public class LoginController implements Initializable {
         } else {
             try {
                 Comprador validarComprador = Comprador.validarUsuario(user, pass, this.compradores);
-                boolean validarVendedor = false;//Vendedor.validarUsuario(user, pass, this.vendedores);
-                if (validarComprador != null && validarVendedor == true) {
+                Vendedor validarVendedor = Vendedor.validarUsuario(user, pass, this.vendedores);
+                if (validarComprador != null && validarVendedor != null) {
                     Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
                     a.show();
-                    FXMLLoader fxmlloader = App.loadFXMLoader("ventana");
+                    FXMLLoader fxmlloader = App.loadFXMLoader("Vendedor");
                     App.setRoot(fxmlloader);
                 } else if (validarComprador != null) {
                     Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
@@ -83,10 +83,10 @@ public class LoginController implements Initializable {
                     cc.setComprador(validarComprador);
                     cc.setCompradores(compradores);
                     cc.setVendedores(vendedores);
-                } else if (validarVendedor == true) {
+                } else if (validarVendedor != null) {
                     Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
                     a.show();
-                    FXMLLoader fxmlloader = App.loadFXMLoader("ventana");
+                    FXMLLoader fxmlloader = App.loadFXMLoader("Vendedor");
                     App.setRoot(fxmlloader);
                 } else {
                     Alert a = new Alert(Alert.AlertType.ERROR, "Usuario no registrado.");

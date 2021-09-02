@@ -104,7 +104,7 @@ public class RegisterController implements Initializable {
             a.show();
         } else {
             try {
-                if (Comprador.validarRegistro(cor, compradores) == true) {
+                if (Comprador.validarRegistro(cor, compradores) == false || Vendedor.validarRegistro(cor, vendedores) == false) {
                     if (tipo.getSelectedToggle() == rb_comprador) {
                         if (resultado() == true) {
                             Comprador.registrarNuevoComprador(nom, ape, org, cor, pas, this.compradores, "src\\main\\resources\\doc\\comprador.txt");
