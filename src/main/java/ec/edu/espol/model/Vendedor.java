@@ -189,6 +189,21 @@ public class Vendedor {
         }
 
     }
+    public static void eliminarVendedor(ArrayList<Vendedor> vendedores, Vendedor vendedor) throws IOException
+    {
+        for(int i = 0; i < vendedores.size(); i++)
+        {
+            if (vendedores.get(i).equals(vendedor))
+            {
+                vendedores.remove(i);
+            }
+        }
+        Util.limpiarArchivo("vendedor.txt");
+        for(Vendedor c: vendedores)
+        {
+            c.saveFile("vendedor.txt");
+        }
+    }   
 
     public static void registrarVehiculo(Scanner sc, ArrayList<Vendedor> vendedores, ArrayList<Automovil> automoviles, ArrayList<Camioneta> camionetas, ArrayList<Motocicleta> motocicletas) throws NoSuchAlgorithmException {
         System.out.println("\n=INGRESAR VEHICULO=");
