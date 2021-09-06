@@ -7,10 +7,14 @@ package ec.edu.espol.model;
 
 import ec.edu.espol.util.Util;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -20,14 +24,16 @@ import javafx.scene.control.Alert;
  *
  * @author rsgar
  */
-public class Comprador {
+public class Comprador implements Serializable{
 
     int ID;
-    String nombres;
-    String apellidos;
-    String organizacion;
-    String correo;
-    String clave;
+    private String nombres;
+    private String apellidos;
+    private String organizacion;
+    private String correo;
+    private String clave;
+    private static final long serialVersionUID = 8799656478674716638L;
+
 
     public Comprador(int ID, String nombres, String apellidos, String organizacion, String correo, String clave) {
         this.ID = ID;
@@ -108,7 +114,7 @@ public class Comprador {
         return comprador;
     }
     
-    public static Comprador validarUsuario(String correo, String clave, ArrayList<Comprador> compradores) throws PasswordException, UserException, NoSuchAlgorithmException{
+    public static Comprador validarUsuario(String correo, String clave, ArrayList<Comprador> compradores) throws PasswordException, NoSuchAlgorithmException{
         boolean validarcorreo = false;
         boolean validarclave = false;
         Comprador comprador = null;
@@ -130,7 +136,8 @@ public class Comprador {
                 throw new PasswordException("PasswordException");
             }
         } else {
-            throw new UserException("UserException");
+            return null;
+            //throw new UserException("UserException");
         }
     }
     
@@ -185,170 +192,35 @@ public class Comprador {
         }
 
     }
-
-    public static void OfertarVehiculo(Scanner sc, ArrayList<Vehiculo> vehiculos, ArrayList<Comprador> compradores) throws NoSuchAlgorithmException {
-        System.out.println("\n=OFERTAR VEHICULO=");
-        System.out.println("Ingrese correo: ");
-        String correo = sc.next();
-        System.out.println("Ingrese clave: ");
-        String clave = sc.next();
-        boolean validarCorreo = false;
-        for (int i = 0; i < compradores.size(); i++) {
-            String clave_i = compradores.get(i).getClave();//clave del comprador que estamos tomando
-            String correo_i = compradores.get(i).getCorreo();//correo del comprador que estamos tomando
-
-            if (correo_i.equals(correo)) {
-                validarCorreo = true;
-                if (clave_i.equals(Util.toHexString(Util.getSHA(clave)))) {
-                    System.out.println("\nBienvenido " + compradores.get(i).getNombres() + " " + compradores.get(i).getApellidos() + " de la organización " + compradores.get(i).getOrganizacion());
-                    System.out.println("\n=OFERTAR=");
-                    System.out.println("Ingrese el tipo de vehiculo: (si desea revisar todos los tipos, ingrese <todos>)");
-                    String tipo = sc.next();
-                    if (tipo.equals("automovil") || tipo.equals("motocicleta") || tipo.equals("camioneta") || tipo.equals("todos")) {
-                        System.out.println("Ingrese el rango del recorrido: (si desea revisar por todos los recorridos, ingrese 0 en ambas opciones)");
-                        System.out.println("Desde: ");
-                        double recorridoInicial = sc.nextDouble();
-                        System.out.println("Hasta: ");
-                        double recorridoFinal = sc.nextDouble();
-                        System.out.println("Ingrese el rango del año: (si desea revisar por todos los años, ingrese 0 en ambas opciones)");
-                        System.out.println("Desde: ");
-                        int añoInicial = sc.nextInt();
-                        System.out.println("Hasta: ");
-                        int añoFinal = sc.nextInt();
-                        System.out.println("Ingrese el rango del precio:");
-                        System.out.println("Desde: ");
-                        double precioInicial = sc.nextDouble();
-                        System.out.println("Hasta: ");
-                        double precioFinal = sc.nextDouble();
-                        if (recorridoInicial != 0 && recorridoFinal != 0) {
-                            vehiculos = Vehiculo.vehiculosxRecorrido(vehiculos, recorridoInicial, recorridoFinal);
-                        }
-
-                        if (añoInicial != 0 && añoFinal != 0) {
-                            vehiculos = Vehiculo.vehiculosxAño(vehiculos, añoInicial, añoFinal);
-                        }
-
-                        if (precioInicial != 0 && precioFinal != 0) {
-                            vehiculos = Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal);
-                        }
-                        double precioOfertado;
-                        if (!vehiculos.isEmpty()) {
-                            int cont = 0;
-                            ArrayList<Vehiculo> vehicles = new ArrayList<>();
-                            switch (tipo) {
-                                case "automovil":
-                                    for (int e = 0; e < vehiculos.size(); e++) {
-                                        if (vehiculos.get(e) instanceof Automovil) {
-                                            cont++;
-                                            vehicles.add(vehiculos.get(e));
-                                        }
-                                    }
-                                    if (cont == 0) {
-                                        System.out.println("No existen vehiculos con esos parametros de busqueda.");
-                                    } else {
-                                        for (int e = 0; e < vehicles.size(); e++) {
-                                            System.out.println("\n" + vehicles.get(e));
-                                            String op = Util.ofertarVehiculos(sc, e, vehicles.size() - 1);
-                                            if (op.equals("anterior")) {
-                                                i -= 2;
-                                            } else if (op.equals("ofertar")) {
-                                                System.out.println("Ingrese el precio a ofertar por el vehiculo: ");
-                                                precioOfertado = sc.nextDouble();
-                                                Oferta.registrarNuevaOferta(vehicles.get(e), compradores.get(i), precioOfertado, "oferta.txt");
-                                                break;
-                                            } else if (op.equals("regresar")) {
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    break;
-
-                                case "camioneta":
-                                    for (int e = 0; e < vehiculos.size(); e++) {
-                                        if (vehiculos.get(e) instanceof Camioneta) {
-                                            cont++;
-                                            vehicles.add(vehiculos.get(e));
-                                        }
-                                    }
-                                    if (cont == 0) {
-                                        System.out.println("No existen vehiculos con esos parametros de busqueda.");
-                                    } else {
-                                        for (int e = 0; e < vehicles.size(); e++) {
-                                            System.out.println("\n" + vehicles.get(e));
-                                            String op = Util.ofertarVehiculos(sc, e, vehicles.size() - 1);
-                                            if (op.equals("anterior")) {
-                                                i -= 2;
-                                            } else if (op.equals("ofertar")) {
-                                                System.out.println("Ingrese el precio a ofertar por el vehiculo: ");
-                                                precioOfertado = sc.nextDouble();
-                                                Oferta.registrarNuevaOferta(vehicles.get(e), compradores.get(i), precioOfertado, "oferta.txt");
-                                                break;
-                                            } else if (op.equals("regresar")) {
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    break;
-
-                                case "motocicleta":
-                                    for (int e = 0; e < vehiculos.size(); e++) {
-                                        if (vehiculos.get(i) instanceof Motocicleta) {
-                                            cont++;
-                                            vehicles.add(vehiculos.get(e));
-                                        }
-                                    }
-                                    if (cont == 0) {
-                                        System.out.println("No existen vehiculos con esos parametros de busqueda.");
-                                    } else {
-                                        for (int e = 0; e < vehicles.size(); e++) {
-                                            System.out.println("\n" + vehicles.get(e));
-                                            String op = Util.ofertarVehiculos(sc, e, vehicles.size() - 1);
-                                            if (op.equals("anterior")) {
-                                                i -= 2;
-                                            } else if (op.equals("ofertar")) {
-                                                System.out.println("Ingrese el precio a ofertar por el vehiculo: ");
-                                                precioOfertado = sc.nextDouble();
-                                                Oferta.registrarNuevaOferta(vehicles.get(e), compradores.get(i), precioOfertado, "oferta.txt");
-                                                break;
-                                            } else if (op.equals("regresar")) {
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    break;
-
-                                default:
-                                    for (int e = 0; e < vehiculos.size(); e++) {
-                                        System.out.println("\n" + vehiculos.get(e));
-                                        String op = Util.ofertarVehiculos(sc, e, vehiculos.size() - 1);
-                                        if (op.equals("anterior")) {
-                                            e -= 2;
-                                        } else if (op.equals("ofertar")) {
-                                            System.out.println("Ingrese el precio a ofertar por el vehiculo: ");
-                                            precioOfertado = sc.nextDouble();
-                                            Oferta.registrarNuevaOferta(vehiculos.get(e), compradores.get(i), precioOfertado, "oferta.txt");
-                                            break;
-                                        } else if (op.equals("regresar")) {
-                                            break;
-                                        }
-                                    }
-                                    break;
-                            }
-                        } else {
-                            System.out.println("No existen vehiculos con esos parametros de busqueda.");
-                        }
-
-                    } else {
-                        System.out.println("Tipo de vehiculo no valido");
-                    }
-                }
-
-            } else {
-                System.out.println("Clave incorrecta");
-            }
-        }
-        if (validarCorreo == false) {
-            System.out.println("Correo incorrecto");
-        }
+    
+    public static void saveListToFileSer(String nomfile, ArrayList<Comprador> compradores){
+        try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(nomfile)))){
+            out.writeObject(compradores);
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se encontró el archivo.");
+            a.show();
+        } catch (IOException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo.");
+            a.show();
+        } 
     }
+    
+    public static ArrayList<Comprador> readListFromFileSer(String nomfile){
+        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(nomfile)))){
+            ArrayList<Comprador> compradores = (ArrayList<Comprador>)in.readObject();
+            in.close();
+            return compradores;
+        } catch (FileNotFoundException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se encontró el archivo.");
+            a.show();
+        } catch (IOException | ClassNotFoundException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo.");
+            a.show();
+        }
+        return null;
+    }
+
 }
+
