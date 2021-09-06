@@ -5,18 +5,19 @@
  */
 package ec.edu.espol.model;
 
-import ec.edu.espol.model.Automovil;
-import ec.edu.espol.model.Camioneta;
-import ec.edu.espol.model.Ingreso;
-import ec.edu.espol.model.Motocicleta;
+import ec.edu.espol.model.Venta;
 import ec.edu.espol.model.Oferta;
 import ec.edu.espol.model.Vehiculo;
 import ec.edu.espol.util.Util;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.Scanner;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -26,15 +27,16 @@ import javafx.scene.control.Alert;
  *
  * @author rsgar
  */
-public class Vendedor {
+public class Vendedor implements Serializable{
 
     int ID;
-    String nombres;
-    String apellidos;
-    String organizacion;
-    String correo;
-    String clave;
-    ArrayList<Vehiculo> vehiculos;
+    private String nombres;
+    private String apellidos;
+    private String organizacion;
+    private String correo;
+    private String clave;
+    private ArrayList<Vehiculo> vehiculos;
+    private static final long serialVersionUID = 8799656478674716638L;
 
     public Vendedor() {
     }
@@ -157,7 +159,8 @@ public class Vendedor {
                 throw new PasswordException("PasswordException");
             }
         } else {
-            throw new UserException("UserException");
+            return vendedor;
+            //throw new UserException("UserException");
         }
     }
     
@@ -176,6 +179,21 @@ public class Vendedor {
         return "Vendedor<" + this.ID + ">{Nombres=" + this.nombres + ", Apellidos=" + this.apellidos + ", Organizacion=" + this.organizacion + ", Correo=" + this.correo + ", Clave=" + this.clave + "}";
     }
 
+    public static void eliminarVendedor(ArrayList<Vendedor> vendedores, Vendedor vendedor) throws IOException
+    {
+        for(int i = 0; i < vendedores.size(); i++)
+        {
+            if (vendedores.get(i).equals(vendedor))
+            {
+                vendedores.remove(i);
+            }
+        }
+        Util.limpiarArchivo("vendedor.txt");
+        for(Vendedor v: vendedores)
+        {
+            v.saveFile("vendedor.txt");
+        }
+    }      
     
     public static void registrarNuevoVendedor(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Vendedor> vendedores, String nomfile) throws VendedorException{
         int id = Util.nextID(nomfile); 
@@ -189,135 +207,20 @@ public class Vendedor {
         }
 
     }
-    public static void eliminarVendedor(ArrayList<Vendedor> vendedores, Vendedor vendedor) throws IOException
-    {
-        for(int i = 0; i < vendedores.size(); i++)
-        {
-            if (vendedores.get(i).equals(vendedor))
-            {
-                vendedores.remove(i);
-            }
-        }
-        Util.limpiarArchivo("vendedor.txt");
-        for(Vendedor c: vendedores)
-        {
-            c.saveFile("vendedor.txt");
-        }
+    
+    public static void saveListToFileSer(String nomfile, ArrayList<Vendedor> vendedores){
+        try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(nomfile)))){
+            out.writeObject(vendedores);
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se encontró el archivo.");
+            a.show();
+        } catch (IOException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo.");
+            a.show();
+        } 
     }   
-
-    public static void registrarVehiculo(Scanner sc, ArrayList<Vendedor> vendedores, ArrayList<Automovil> automoviles, ArrayList<Camioneta> camionetas, ArrayList<Motocicleta> motocicletas) throws NoSuchAlgorithmException {
-        System.out.println("\n=INGRESAR VEHICULO=");
-        System.out.println("Ingrese correo: ");
-        String correo = sc.next();
-        System.out.println("Ingrese clave: ");
-        String clave = sc.next();
-        boolean validarCorreo = false;
-        for (int i = 0; i < vendedores.size(); i++) {
-            String clave_i = vendedores.get(i).getClave();//clave del vendedor que estamos tomando
-            String correo_i = vendedores.get(i).getCorreo();//correo del vendedor que estamos tomando
-
-            if (correo_i.equals(correo)) {
-                validarCorreo = true;
-                if (clave_i.equals(Util.toHexString(Util.getSHA(clave)))) {
-                    System.out.println("\nBienvenido " + vendedores.get(i).getNombres() + " " + vendedores.get(i).getApellidos() + " de la organización " + vendedores.get(i).getOrganizacion());
-                    System.out.println("Ingrese el tipo de vechiculo(auto/motocicleta/camioneta): ");
-                    String tipo = sc.next();
-                    int id = vendedores.get(i).getID(); //obtenemos el ID del vendedor
-                    switch (tipo) {
-                        case "auto":
-                            Automovil.nextAutomovil(sc, id, automoviles, "automovil.txt");
-                            break;
-                        case "motocicleta":
-                            Motocicleta.nextMotocicleta(sc, id, motocicletas, "motocicleta.txt");
-                            break;
-                        case "camioneta":
-                            Camioneta.nextCamioneta(sc, id, camionetas, "camioneta.txt");
-                            break;
-                        default:
-                            System.out.println("Ingrese un tipo de vehiculo correcto.");
-                            break;
-                    }
-                } else {
-                    System.out.println("Clave incorrecta");
-                }
-            }
-        }
-        if (validarCorreo == false) {
-            System.out.println("Correo incorrecto");
-        }
-    }
-
-    public static void aceptarOferta(Scanner sc, ArrayList<Vendedor> vendedores, ArrayList<Oferta> ofertas, ArrayList<Ingreso> ingresos, ArrayList<Vehiculo> vehiculos) throws NoSuchAlgorithmException, IOException {
-        System.out.println("\n=OFERTAS=");
-        System.out.println("Ingrese correo: ");
-        String correo = sc.next();
-        System.out.println("Ingrese clave: ");
-        String clave = sc.next();
-        boolean validarCorreo = false;
-        for (int i = 0; i < vendedores.size(); i++) {
-            String clave_i = vendedores.get(i).getClave();//clave del vendedor que estamos tomando
-            String correo_i = vendedores.get(i).getCorreo();//correo del vendedor que estamos tomando
-
-            if (correo_i.equals(correo)) {
-                validarCorreo = true;
-                if (clave_i.equals(Util.toHexString(Util.getSHA(clave)))) {
-                    System.out.println("\nBienvenido " + vendedores.get(i).getNombres() + " " + vendedores.get(i).getApellidos() + " de la organización " + vendedores.get(i).getOrganizacion());
-                    System.out.println("Ingrese una placa: ");
-                    String placa = sc.next();
-                    boolean validarPlaca = false;
-                    for (Vehiculo v : vendedores.get(i).getVehiculos()) //recorremos los vehiculos que ha registrado ese vendedor
-                    {
-                        if (v.getPlaca().equals(placa)) //verificamos que la palca sea correcta
-                        {
-                            validarPlaca = true;
-                            if (v.getOfertas().isEmpty()) //verificamos que ese vehiculo tenga ofertas
-                            {
-                                System.out.println("No se han realizado ofertas para este vehiculo.");
-                            } else {
-                                System.out.println("\nVehiculo{ Marca:" + v.getMarca() + ", Modelo:" + v.getModelo() + ", Precio: " + v.getPrecio() + "}");
-                                System.out.println("Se han realizado " + v.getOfertas().size() + " ofertas");
-                                ArrayList<Oferta> ofs = v.getOfertas();
-                                OUTER:
-                                for (int e = 0; e < ofs.size(); e++) {
-                                    System.out.println("\n-Oferta <" + (e + 1) + ">-");
-                                    System.out.println("Correo: " + ofs.get(e).getComprador().getCorreo());
-                                    System.out.println("Precio Ofertado: $" + ofs.get(e).getPrecioOfertado() + "\n");
-                                    String op = Util.aceptarOfertas(sc, e, ofs.size() - 1);
-                                    switch (op) {
-                                        case "anterior":
-                                            e -= 2;
-                                            break;
-                                        case "aceptar":
-                                            System.out.println("Oferta aceptada, se enviara un mensaje al correo del ofertante.");
-                                            String mensaje = "<H1><b>Estimado: " + ofs.get(e).getComprador().getNombres().toUpperCase() + " " + ofs.get(e).getComprador().getApellidos().toUpperCase() + "</b></H1></br></br>"
-                                                    + "<H2>Le informamos a Ud. que su oferta por el vehiculo de placas " + v.getPlaca() + " ha sido aceptada, por favor ponerse en contacto con el dueño del vehiculo antes singularizado.</H2></br></br></br>"
-                                                    + "<H2><em> SYSTEM-POO-G2 </em></H2>";
-                                            Util.enviarEmail(ofs.get(e).getComprador().getCorreo(), mensaje);
-                                            Ingreso.eliminarIngreso(ingresos, v);
-                                            Oferta.eliminarOferta(ofertas, v);
-                                            Vehiculo.eliminarVehiculo(vehiculos, v);
-                                            break OUTER;
-                                        case "regresar":
-                                            break OUTER;
-                                        default:
-                                            break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (validarPlaca == false) {
-                        System.out.println("Placa erronea.");
-                    }
-                } else {
-                    System.out.println("Clave incorrecta");
-                }
-            }
-        }
-        if (validarCorreo == false) {
-            System.out.println("Correo incorrecto");
-        }
-
-    }
+    
 
 }
