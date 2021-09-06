@@ -6,9 +6,12 @@
 package ec.edu.espol.controller;
 
 import ec.edu.espol.model.Comprador;
+import ec.edu.espol.model.Oferta;
 import ec.edu.espol.model.PasswordException;
 import ec.edu.espol.model.UserException;
+import ec.edu.espol.model.Vehiculo;
 import ec.edu.espol.model.Vendedor;
+import ec.edu.espol.model.Venta;
 import ec.edu.espol.proyecto2p.App;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -52,6 +55,7 @@ public class LoginController implements Initializable {
         try {
             this.compradores = Comprador.readFile("src\\main\\resources\\doc\\comprador.txt");
             this.vendedores = Vendedor.readFile("src\\main\\resources\\doc\\vendedor.txt");
+            
         } catch (FileNotFoundException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "Documento no encontrado.");
             a.show();
@@ -70,12 +74,12 @@ public class LoginController implements Initializable {
                 Comprador validarComprador = Comprador.validarUsuario(user, pass, this.compradores);
                 Vendedor validarVendedor = Vendedor.validarUsuario(user, pass, this.vendedores);
                 if (validarComprador != null && validarVendedor != null) {
-                    Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
+                    Alert a = new Alert(Alert.AlertType.INFORMATION, "Ingreso exitoso.");
                     a.show();
-                    FXMLLoader fxmlloader = App.loadFXMLoader("Vendedor");
+                    FXMLLoader fxmlloader = App.loadFXMLoader("CyV");
                     App.setRoot(fxmlloader);
                 } else if (validarComprador != null) {
-                    Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
+                    Alert a = new Alert(Alert.AlertType.INFORMATION, "Ingreso exitoso.");
                     a.show();
                     FXMLLoader fxmlloader = App.loadFXMLoader("Comprador");
                     App.setRoot(fxmlloader);
@@ -84,10 +88,14 @@ public class LoginController implements Initializable {
                     cc.setCompradores(compradores);
                     cc.setVendedores(vendedores);
                 } else if (validarVendedor != null) {
-                    Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Ingreso exitoso.");
+                    Alert a = new Alert(Alert.AlertType.INFORMATION, "Ingreso exitoso.");
                     a.show();
                     FXMLLoader fxmlloader = App.loadFXMLoader("Vendedor");
                     App.setRoot(fxmlloader);
+                    VendedorController vc = fxmlloader.getController();
+                    vc.setVendedores(vendedores);
+                    vc.setCompradores(compradores);
+                    vc.setVendedor(validarVendedor);
                 } else {
                     Alert a = new Alert(Alert.AlertType.ERROR, "Usuario no registrado.");
                     a.show();
@@ -104,6 +112,7 @@ public class LoginController implements Initializable {
             } catch (IOException ex) {
                 Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo del siguiente grafo de scene");
                 a.show();
+                ex.printStackTrace();
             }
         }
     }
