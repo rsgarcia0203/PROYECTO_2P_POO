@@ -7,29 +7,38 @@ package ec.edu.espol.model;
 
 import ec.edu.espol.util.Util;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
+import javafx.scene.control.Alert;
 
 /**
  *
  * @author rsgar
  */
-public class Oferta {
+public class Oferta implements Serializable{
     private int ID;
     private int IDvehiculo;
-    private int IDtipo; //guardaremos el ID del tipo dependiendo del tipo
+    private String tipo; //guardaremos el ID del tipo dependiendo del tipo
+    private String placas;
+    private double precioV;
     private int IDcomprador;
     private double precioOfertado;
     private Vehiculo vehiculo;
     private Comprador comprador;
+    private static final long serialVersionUID = 8799656478674716638L;
     
-    public Oferta(int ID, int IDvehiculo, int IDtipo, int IDcomprador, double precioOfertado){
+    public Oferta(int ID, int IDvehiculo, String tipo, int IDcomprador, double precioOfertado){
         this.ID = ID;
         this.IDvehiculo = IDvehiculo;
-        this.IDtipo = IDtipo;
+        this.tipo = tipo;
         this.IDcomprador = IDcomprador;
         this.precioOfertado = precioOfertado;
     }
@@ -48,14 +57,6 @@ public class Oferta {
 
     public void setIDvehiculo(int IDvehiculo) {
         this.IDvehiculo = IDvehiculo;
-    }
-
-    public int getIDtipo() {
-        return IDtipo;
-    }
-
-    public void setIDtipo(int IDtipo) {
-        this.IDtipo = IDtipo;
     }
 
     public int getIDcomprador() {
@@ -89,12 +90,36 @@ public class Oferta {
     public void setComprador(Comprador comprador) {
         this.comprador = comprador;
     }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getPlacas() {
+        return placas;
+    }
+
+    public void setPlacas(String placas) {
+        this.placas = placas;
+    }
+
+    public double getPrecioV() {
+        return precioV;
+    }
+
+    public void setPrecioV(double precioV) {
+        this.precioV = precioV;
+    }
     
     public void saveFile(String nomfile)
     {
         try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nomfile),true)))
         {
-            pw.println(this.ID+"|"+this.IDvehiculo+"|"+this.IDtipo+"|"+this.IDcomprador+"|"+this.precioOfertado);
+            pw.println(this.ID+"|"+this.IDvehiculo+"|"+this.tipo+"|"+this.IDcomprador+"|"+this.precioOfertado);
         }
         catch(Exception e)
         {
@@ -109,7 +134,7 @@ public class Oferta {
             while (sc.hasNextLine()){
                 String linea = sc.nextLine();
                 String [] arreglo = linea.split("\\|");
-                Oferta o = new Oferta(Integer.parseInt(arreglo[0]), Integer.parseInt(arreglo[1]), Integer.parseInt(arreglo[2]), Integer.parseInt(arreglo[3]), Double.parseDouble(arreglo[4]));
+                Oferta o = new Oferta(Integer.parseInt(arreglo[0]), Integer.parseInt(arreglo[1]), arreglo[2], Integer.parseInt(arreglo[3]), Double.parseDouble(arreglo[4]));
                 oferta.add(o);
             }
         }catch(Exception ex){
@@ -120,52 +145,29 @@ public class Oferta {
 
     @Override
     public String toString() {
-        return "Oferta<" + this.ID + ">{IDvehiculo=" + this.IDvehiculo + ", IDtipo=" + this.IDtipo + ", IDcomprador=" + this.IDcomprador + ", precioOfertado=" + this.precioOfertado + ", vehiculo=" + this.vehiculo + ", comprador=" + this.comprador + '}';
+        return "Oferta<" + this.ID + ">{IDvehiculo=" + this.IDvehiculo + ", IDtipo=" + this.tipo + ", IDcomprador=" + this.IDcomprador + ", precioOfertado=" + this.precioOfertado + ", vehiculo=" + this.vehiculo + ", comprador=" + this.comprador + '}';
     }
     
     public static void registrarNuevaOferta(Vehiculo vehiculo, Comprador comprador, double precioOfertado, String nomfile)
     {
         int id = Util.nextID(nomfile);
-        int IDvehiculo = vehiculo.getIDvehiculo();
-        int IDtipo = 0;
+        int IDvehiculo = vehiculo.getID();
         int IDcomprador = comprador.getID();
-        if (vehiculo instanceof Automovil)
-            IDtipo = 1; 
-        else if (vehiculo instanceof Motocicleta)
-            IDtipo = 2; 
-        else if (vehiculo instanceof Camioneta)
-            IDtipo = 3; 
-        Oferta nuevo = new Oferta(id,IDvehiculo, IDtipo, IDcomprador, precioOfertado);
+        String tipo = vehiculo.getTipo();
+        Oferta nuevo = new Oferta(id,IDvehiculo, tipo, IDcomprador, precioOfertado);
         nuevo.saveFile(nomfile);
         System.out.println("Oferta registrada con exito.");
     }
     
-    public static void link(ArrayList<Comprador> compradores, ArrayList<Automovil> automoviles, ArrayList<Camioneta> camionetas, ArrayList<Motocicleta> motocicletas, ArrayList<Oferta> ofertas){
+    public static void link(ArrayList<Comprador> compradores, ArrayList<Vehiculo> vehiculos, ArrayList<Oferta> ofertas){
         for(Oferta o: ofertas){
             Comprador c = Comprador.searchByID(compradores, o.getIDcomprador());
-            switch(o.getIDtipo())
-            {
-                case 1:
-                    Automovil au = Automovil.searchByID(automoviles, o.getIDvehiculo());
-                    au.getOfertas().add(o);
-                    o.setComprador(c);
-                    o.setVehiculo(au);
-                    break; 
-                   
-                case 2:
-                    Motocicleta mo = Motocicleta.searchByID(motocicletas, o.getIDvehiculo());
-                    mo.getOfertas().add(o);
-                    o.setComprador(c);
-                    o.setVehiculo(mo);
-                    break; 
-                    
-                case 3:
-                    Camioneta ca = Camioneta.searchByID(camionetas, o.getIDvehiculo());
-                    ca.getOfertas().add(o);
-                    o.setComprador(c);
-                    o.setVehiculo(ca);
-                    break; 
-            }                      
+            Vehiculo v = Vehiculo.searchByID(vehiculos, o.getIDvehiculo());
+            v.getOfertas().add(o);
+            o.setComprador(c);
+            o.setVehiculo(v);
+            o.setPlacas(v.getPlaca());
+            
         }
     }
     
@@ -184,4 +186,33 @@ public class Oferta {
             o.saveFile("oferta.txt");
         }
     }      
+    
+    public static void saveListToFileSer(String nomfile, ArrayList<Oferta> ofertas){
+        try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(nomfile)))){
+            out.writeObject(ofertas);
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se encontró el archivo.");
+            a.show();
+        } catch (IOException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo.");
+            a.show();
+        } 
+    }
+    
+    public static ArrayList<Oferta> readListFromFileSer(String nomfile){
+        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(nomfile)))){
+            ArrayList<Oferta> ofertas = (ArrayList<Oferta>)in.readObject();
+            in.close();
+            return ofertas;
+        } catch (FileNotFoundException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se encontró el archivo.");
+            a.show();
+        } catch (IOException | ClassNotFoundException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo.");
+            a.show();
+        }
+        return null;
+    }
 }
