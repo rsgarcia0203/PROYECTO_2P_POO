@@ -190,12 +190,8 @@ public class Oferta implements Serializable{
                 ofertas.remove(i);
             }
         }
-        Util.limpiarArchivo("oferta.txt");
-        for(Oferta o: ofertas)
-        {
-            o.saveFile("oferta.txt");
-        }
-    }      
+        Oferta.saveListToFileSer("src\\main\\resources\\doc\\oferta.ser", ofertas);
+    }     
     
     public static void saveListToFileSer(String nomfile, ArrayList<Oferta> ofertas){
         try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(nomfile)))){
