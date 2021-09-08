@@ -5,6 +5,7 @@
  */
 package ec.edu.espol.model;
 
+import ec.edu.espol.util.Util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,7 +25,7 @@ public class Oferta implements Serializable {
 
     private int ID;
     private int IDvehiculo;
-    private String tipo; 
+    private String tipo;
     private String placas;
     private double precioV;
     private int IDcomprador;
@@ -150,20 +151,18 @@ public class Oferta implements Serializable {
         }
         return (max + 1);
     }
-    
-    public static ArrayList<Oferta> searchByPlaca(ArrayList<Oferta> ofertas, String placa) throws PlacaException{
-        ArrayList<Oferta> xplaca = new ArrayList <>();
-        for(Oferta o: ofertas)
-        {
-            if(o.getPlacas().equals(placa))
-            {
+
+    public static ArrayList<Oferta> searchByPlaca(ArrayList<Oferta> ofertas, String placa) throws PlacaException {
+        ArrayList<Oferta> xplaca = new ArrayList<>();
+        for (Oferta o : ofertas) {
+            if (o.getPlacas().equals(placa)) {
                 xplaca.add(o);
             }
         }
-        return xplaca;      
+        return xplaca;
     }
-    
-    public static void registrarNuevaOferta(Vehiculo vehiculo, Comprador comprador, ArrayList<Oferta> ofertas, double precioOfertado) {
+
+    public static void registrarNuevaOferta(Vehiculo vehiculo, Comprador comprador, ArrayList<Oferta> ofertas, ArrayList<Vehiculo> vehiculos, double precioOfertado) {
         int id = Oferta.nextID(ofertas);
         int IDvehiculo = vehiculo.getID();
         int IDcomprador = comprador.getID();
@@ -172,21 +171,62 @@ public class Oferta implements Serializable {
         if (!ofertas.contains(nuevo)) {
             ofertas.add(nuevo);
             Oferta.saveListToFileSer("src\\main\\resources\\doc\\oferta.ser", ofertas);
+            for (Vehiculo v : vehiculos) {
+                if (v.equals(vehiculo)) {
+                    v.getOfertas().add(nuevo);
+                    Vehiculo.saveListToFileSer("src\\main\\resources\\doc\\vehiculos.ser", vehiculos);
+                }
+            }
         } else {
             throw new OfertaException("");
         }
-        
+
     }
 
-    public static void eliminarOferta(ArrayList<Oferta> ofertas, Vehiculo vehiculo) throws IOException {
+    public static void Aceptar(ArrayList<Oferta> ofertas, ArrayList<Vehiculo> vehiculos, Vehiculo vehiculo) throws IOException {
+        Oferta of = null;
+        for (int i = 0; i < ofertas.size(); i++) {
+            if (ofertas.get(i).getVehiculo().equals(vehiculo)) {
+                of = ofertas.get(i);
+                ofertas.remove(i);
+                for (Vehiculo v : vehiculos) {
+                    if (v.equals(vehiculo)) {
+                        for(int e = 0; e < v.getOfertas().size(); e++){
+                            if(v.getOfertas().get(e).equals(ofertas.get(i))){
+                                v.getOfertas().remove(e);
+                                Vehiculo.saveListToFileSer("src\\main\\resources\\doc\\vehiculos.ser", vehiculos);
+                            }
+                        }  
+                    }
+                }
+            }
+        }
+        Oferta.saveListToFileSer("src\\main\\resources\\doc\\oferta.ser", ofertas);
+        String mensaje = "<H1><b>Estimado: " + of.getComprador().getNombres().toUpperCase() + " " + of.getComprador().getApellidos().toUpperCase() + "</b></H1></br></br>"
+                                                    + "<H2>Le informamos a Ud. que su oferta por el vehiculo de placas " + vehiculo.getPlaca() + " ha sido aceptada, por favor ponerse en contacto con el dueño del vehiculo antes singularizado.</H2></br></br></br>"
+                                                    + "<H2><em> SYSTEM-POO-G2 </em></H2>";
+        Util.enviarEmail(of.getComprador().getCorreo(), mensaje);
+    }
+    
+    public static void eliminarOferta(ArrayList<Oferta> ofertas, ArrayList<Vehiculo> vehiculos, Vehiculo vehiculo) throws IOException{
         for (int i = 0; i < ofertas.size(); i++) {
             if (ofertas.get(i).getVehiculo().equals(vehiculo)) {
                 ofertas.remove(i);
+                for (Vehiculo v : vehiculos) {
+                    if (v.equals(vehiculo)) {
+                        for(int e = 0; e < v.getOfertas().size(); e++){
+                            if(v.getOfertas().get(e).equals(ofertas.get(i))){
+                                v.getOfertas().remove(e);
+                                Vehiculo.saveListToFileSer("src\\main\\resources\\doc\\vehiculos.ser", vehiculos);
+                            }
+                        }  
+                    }
+                }
             }
         }
         Oferta.saveListToFileSer("src\\main\\resources\\doc\\oferta.ser", ofertas);
     }
-
+    
     public static void saveListToFileSer(String nomfile, ArrayList<Oferta> ofertas) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(nomfile)))) {
             out.writeObject(ofertas);
@@ -215,9 +255,9 @@ public class Oferta implements Serializable {
         }
         return null;
     }
-    
-    public static int compareByPrecioOfertado(Oferta o1, Oferta o2){
-        return Double.compare(o2.getPrecioOfertado(),o1.getPrecioOfertado());
+
+    public static int compareByPrecioOfertado(Oferta o1, Oferta o2) {
+        return Double.compare(o2.getPrecioOfertado(), o1.getPrecioOfertado());
     }
 
 }

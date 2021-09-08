@@ -150,7 +150,6 @@ public class CompradorController implements Initializable {
             cbx_tipos.setItems(FXCollections.observableArrayList(tipos));
             this.vehicles = Vehiculo.readListFromFileSer("src\\main\\resources\\doc\\vehiculos.ser");
             this.ofertas = Oferta.readListFromFileSer("src\\main\\resources\\doc\\oferta.ser");
-            System.out.println(this.vehicles);
             ObservableList<Vehiculo> vehiculosObs = FXCollections.observableArrayList(this.vehicles);
             tableOfertas.setItems(vehiculosObs);
             id_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
@@ -405,7 +404,7 @@ public class CompradorController implements Initializable {
                         a2.showAndWait();
                         ArrayList<Vehiculo> Nvehiculos = (ArrayList<Vehiculo>) tableOfertas.getItems();
                         Nvehiculos.remove(vehiculoSel);
-                        Oferta.registrarNuevaOferta(vehiculoSel, comprador, this.ofertas, precioOfertado);
+                        Oferta.registrarNuevaOferta(vehiculoSel, comprador, this.ofertas,this.vehiculos, precioOfertado);
                         tableOfertas.setItems(FXCollections.observableArrayList(Nvehiculos));
                     }
                 } else {

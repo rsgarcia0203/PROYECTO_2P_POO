@@ -14,6 +14,7 @@ import ec.edu.espol.model.Vendedor;
 import ec.edu.espol.model.VendedorException;
 import ec.edu.espol.proyecto2p.App;
 import ec.edu.espol.util.Util;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -39,9 +40,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -49,7 +55,7 @@ import javafx.scene.layout.VBox;
  * @author rsgar
  */
 public class CyVController implements Initializable {
-    
+
     private Comprador comprador;
     private ArrayList<Comprador> compradores;
     private ArrayList<Vendedor> vendedores;
@@ -167,23 +173,13 @@ public class CyVController implements Initializable {
     @FXML
     private TextField precioOfer;
     @FXML
-    private TableView<Vehiculo> tableOfertas;
+    private TableView<Oferta> tableOfertas;
     @FXML
-    private TableView<Oferta> tableOferta;
-
     private TableColumn<Oferta, String> idO_column;
     @FXML
     private TableColumn<Oferta, String> tiposO_column;
     @FXML
     private TableColumn<Oferta, String> placasO_column;
-    @FXML
-    private TableColumn<Oferta, String> marcaO_column;
-    @FXML
-    private TableColumn<Oferta, String> modeloO_column;
-    @FXML
-    private TableColumn<Oferta, Integer> anioO_column;
-    @FXML
-    private TableColumn<Oferta, String> colorO_column;
     @FXML
     private TableColumn<Oferta, Double> precioV_column;
     @FXML
@@ -221,7 +217,7 @@ public class CyVController implements Initializable {
     @FXML
     private PasswordField txt_clave_confirmacion;
 
-   private ArrayList<Vehiculo> vehiculosFile;
+    private ArrayList<Vehiculo> vehiculosFile;
     private Vendedor vendedor;
     private ArrayList<Vehiculo> vehicles;
     private ArrayList<Oferta> myofertas;
@@ -230,7 +226,13 @@ public class CyVController implements Initializable {
     private Oferta ofertaSel;
     private ArrayList<Oferta> ofertas;
     ArrayList<Vehiculo> vehiculos;
-    
+    @FXML
+    private GridPane contenedor4;
+    @FXML
+    private TextField txt_ruta;
+    @FXML
+    private ImageView img_cargar;
+
     /**
      * Initializes the controller class.
      */
@@ -245,48 +247,63 @@ public class CyVController implements Initializable {
             cbx_tipos.setItems(FXCollections.observableArrayList(tipos));
             this.vehiculosFile = Vehiculo.readListFromFileSer("src\\main\\resources\\doc\\vehiculos.ser");
             this.ofertasFile = Oferta.readListFromFileSer("src\\main\\resources\\doc\\oferta.ser");
-            ObservableList<Vehiculo> vehiculos = FXCollections.observableArrayList(this.vehicles);
-            id_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
-            tipos_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
-            placas_column.setCellValueFactory(new PropertyValueFactory<>("placa"));
-            marca_column.setCellValueFactory(new PropertyValueFactory<>("marca"));
-            modelo_column.setCellValueFactory(new PropertyValueFactory<>("modelo"));
-            motor_column.setCellValueFactory(new PropertyValueFactory<>("tipo_motor"));
-            anio_column.setCellValueFactory(new PropertyValueFactory<>("año"));
-            recorrido_column.setCellValueFactory(new PropertyValueFactory<>("recorrido"));
-            color_column.setCellValueFactory(new PropertyValueFactory<>("color"));
-            combustible_column.setCellValueFactory(new PropertyValueFactory<>("tipo_combustible"));
-            vidrios_column.setCellValueFactory(new PropertyValueFactory<>("vidrios"));
-            transmision_column.setCellValueFactory(new PropertyValueFactory<>("transmision"));
-            traccion_column.setCellValueFactory(new PropertyValueFactory<>("traccion"));
-            precio_column.setCellValueFactory(new PropertyValueFactory<>("precio"));
-            tablexOfertar.setItems(vehiculos);
-            tableOfertas.setOnMouseClicked((MouseEvent e) -> {
-                Vehiculo vehiculoSel = tablexOfertar.getSelectionModel().getSelectedItem();
-                if (vehiculoSel != null) {
-                    if (!precioOfer.getText().equals("")) {
-                        double precioOfertado = Double.parseDouble(precioOfer.getText());
-                        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Desea ofertar $" + precioOfertado + " por este vehículo?.");
-                        a.setTitle("SYSTEM-POO");
-                        a.setHeaderText("Confirmación de oferta");
-                        Optional<ButtonType> resultado = a.showAndWait();
-                        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                            Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Rol cambiado con éxito.");
-                            a2.showAndWait();
-                            //ArrayList<Vehiculo> Nvehiculos = (ArrayList<Vehiculo>) tableOfertas.getItems();
-                            //Nvehiculos.remove(vehiculoSel);
-                            //.registrarNuevaOferta(vehiculoSel, comprador, precioOfertado, "oferta.txt");
-                            //tablexOfertar.setItems(FXCollections.observableArrayList(Nvehiculos));
-                        }
+            ObservableList<Vehiculo> vehiculosxO = FXCollections.observableArrayList(this.vehicles);
+            id_columnxO.setCellValueFactory(new PropertyValueFactory<>("ID"));
+            tipos_columnxO.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+            placas_columnxO.setCellValueFactory(new PropertyValueFactory<>("placa"));
+            marca_columnxO.setCellValueFactory(new PropertyValueFactory<>("marca"));
+            modelo_columnxO.setCellValueFactory(new PropertyValueFactory<>("modelo"));
+            motor_columnxO.setCellValueFactory(new PropertyValueFactory<>("tipo_motor"));
+            anio_columnxO.setCellValueFactory(new PropertyValueFactory<>("año"));
+            recorrido_columnxO.setCellValueFactory(new PropertyValueFactory<>("recorrido"));
+            color_columnxO.setCellValueFactory(new PropertyValueFactory<>("color"));
+            combustible_columnxO.setCellValueFactory(new PropertyValueFactory<>("tipo_combustible"));
+            vidrios_columnxO.setCellValueFactory(new PropertyValueFactory<>("vidrios"));
+            transmision_columnxO.setCellValueFactory(new PropertyValueFactory<>("transmision"));
+            traccion_columnxO.setCellValueFactory(new PropertyValueFactory<>("traccion"));
+            precio_columnxO.setCellValueFactory(new PropertyValueFactory<>("precio"));
+            tablexOfertar.setItems(vehiculosxO);
+            tablexOfertar.setOnMouseClicked((MouseEvent e) -> {
+                Vehiculo vehiculoSelecxO = tablexOfertar.getSelectionModel().getSelectedItem();
+                this.vehiculoSel = vehiculoSelecxO;
+            });
+            if (!(this.vendedor.getVehiculos().isEmpty())) {
+                this.vehicles = this.vendedor.getVehiculos();
+                ObservableList<Vehiculo> misvehiculos = FXCollections.observableArrayList(this.vehicles);
+                id_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
+                tipos_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+                placas_column.setCellValueFactory(new PropertyValueFactory<>("placa"));
+                marca_column.setCellValueFactory(new PropertyValueFactory<>("marca"));
+                modelo_column.setCellValueFactory(new PropertyValueFactory<>("modelo"));
+                motor_column.setCellValueFactory(new PropertyValueFactory<>("tipo_motor"));
+                anio_column.setCellValueFactory(new PropertyValueFactory<>("año"));
+                recorrido_column.setCellValueFactory(new PropertyValueFactory<>("recorrido"));
+                color_column.setCellValueFactory(new PropertyValueFactory<>("color"));
+                combustible_column.setCellValueFactory(new PropertyValueFactory<>("tipo_combustible"));
+                vidrios_column.setCellValueFactory(new PropertyValueFactory<>("vidrios"));
+                transmision_column.setCellValueFactory(new PropertyValueFactory<>("transmision"));
+                traccion_column.setCellValueFactory(new PropertyValueFactory<>("traccion"));
+                precio_column.setCellValueFactory(new PropertyValueFactory<>("precio"));
+                tableVehiculos.setItems(misvehiculos);
+                this.myofertas = this.vendedor.getOfertas();
+                this.myofertas.sort(Oferta::compareByPrecioOfertado);
+                ObservableList<Oferta> misofertas = FXCollections.observableArrayList(this.myofertas);
+                idO_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
+                tiposO_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+                placasO_column.setCellValueFactory(new PropertyValueFactory<>("placas"));
+                precioV_column.setCellValueFactory(new PropertyValueFactory<>("precioV"));
+                precioO_column.setCellValueFactory(new PropertyValueFactory<>("precioOfertado"));
+                tableOfertas.setItems(misofertas);
+                tableOfertas.setOnMouseClicked((MouseEvent e) -> {
+                    Oferta ofertaSeleccionada = tableOfertas.getSelectionModel().getSelectedItem();
+                    if (ofertaSeleccionada != null) {
+                        ofertaSel = ofertaSeleccionada;
                     } else {
-                        Alert a = new Alert(Alert.AlertType.WARNING, "Para ofertar debe ingresar un precio a ofertar por el vehículo seleccionado.");
+                        Alert a = new Alert(Alert.AlertType.WARNING, "Debe seleccionar un vehículo.");
                         a.show();
                     }
-                } else {
-                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe seleccionar un vehículo.");
-                    a.show();
-                }
-            });
+                });
+            }
         } catch (FileNotFoundException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "Documento no encontrado.");
             a.show();
@@ -295,7 +312,7 @@ public class CyVController implements Initializable {
             a.show();
         }
     }
-    
+
     public void setVendedor(Vendedor vendedor) {
         this.vendedor = vendedor;
         txt_nombres.setText(this.vendedor.getNombres());
@@ -335,7 +352,7 @@ public class CyVController implements Initializable {
             a3.show();
         }
     }
-    
+
     @FXML
     private void cambiar(ActionEvent event) {
         String item = (String) cbx_tipos.getValue();
@@ -365,6 +382,13 @@ public class CyVController implements Initializable {
         Optional<ButtonType> resultado = a.showAndWait();
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             Vehiculo.registrarNuevoVehiculo(v, this.vehiculosFile);
+            for (Vendedor ven : this.vendedores) {
+                if (ven.equals(this.vendedor)) {
+                    ven.getVehiculos().add(v);
+                    Vendedor.saveListToFileSer("src\\main\\resources\\doc\\vendedores.ser", vendedores);
+                }
+            }
+            this.vendedor.getVehiculos().add(v);
             Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Vehiculo registrado con éxito.");
             a2.show();
         }
@@ -395,6 +419,16 @@ public class CyVController implements Initializable {
         contenedor3.setDisable(true);
     }
 
+    public void activarCont4() {
+        contenedor4.setOpacity(1);
+        contenedor4.setDisable(false);
+    }
+
+    public void desactivarCont4() {
+        contenedor4.setOpacity(0);
+        contenedor4.setDisable(true);
+    }
+
     @FXML
     private void Registrar(MouseEvent event) {
         try {
@@ -416,6 +450,7 @@ public class CyVController implements Initializable {
                         a.show();
                     } else {
                         Vehiculo v = new Vehiculo(id, this.vendedor.getID(), placa, marca, modelo, motor, año, recorrido, color, combustible, precio);
+                        v.setVendedor(this.vendedor);
                         registrarVehiculo(v);
                     }
                 } else if (item.equals("Automovil")) {
@@ -435,6 +470,7 @@ public class CyVController implements Initializable {
                         a.show();
                     } else {
                         Vehiculo v = new Vehiculo(id, this.vendedor.getID(), placa, marca, modelo, motor, año, recorrido, color, combustible, precio, transmision, vidrios);
+                        v.setVendedor(this.vendedor);
                         registrarVehiculo(v);
                     }
                 } else if (item.equals("Camioneta")) {
@@ -455,6 +491,7 @@ public class CyVController implements Initializable {
                         a.show();
                     } else {
                         Vehiculo v = new Vehiculo(id, this.vendedor.getID(), placa, marca, modelo, motor, año, recorrido, color, combustible, precio, transmision, vidrios, traccion);
+                        v.setVendedor(this.vendedor);
                         registrarVehiculo(v);
                     }
                 }
@@ -464,9 +501,9 @@ public class CyVController implements Initializable {
             a.showAndWait();
         }
     }
-    @FXML
-    private void buscarOfertar(MouseEvent event) {
-        
+
+    private void buscar(MouseEvent event) {
+
         try {
             if (recorridoIni.getText().equals("") && recorridoFin.getText().equals("") && anioIni.getText().equals("") && anioFin.getText().equals("") && precioIni.getText().equals("") && precioFin.getText().equals("") && precioOfer.getText().equals("")) {
                 Alert a = new Alert(Alert.AlertType.ERROR, "Debe llenar al menos un parámetro antes de dar clic en buscar.");
@@ -519,17 +556,17 @@ public class CyVController implements Initializable {
 
                 if (recorridoInicial != 0 && recorridoFinal != 0) {
                     vehiculos = Vehiculo.vehiculosxRecorrido(vehiculos, recorridoInicial, recorridoFinal);
-                    tableOfertas.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxRecorrido(vehiculos, recorridoInicial, recorridoFinal)));
+                    tablexOfertar.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxRecorrido(vehiculos, recorridoInicial, recorridoFinal)));
                 }
 
                 if (añoInicial != 0 && añoFinal != 0) {
                     vehiculos = Vehiculo.vehiculosxAño(vehiculos, añoInicial, añoFinal);
-                    tableOfertas.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxAño(vehiculos, añoInicial, añoFinal)));
+                    tablexOfertar.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxAño(vehiculos, añoInicial, añoFinal)));
                 }
 
                 if (precioInicial != 0 && precioFinal != 0) {
                     vehiculos = Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal);
-                    tableOfertas.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal)));
+                    tablexOfertar.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal)));
                 }
 
                 if (vehiculos.isEmpty()) {
@@ -544,41 +581,62 @@ public class CyVController implements Initializable {
             Alert a = new Alert(Alert.AlertType.WARNING, "No existen vehículos para ese parámetro de búsqueda.");
             a.show();
         }
-        
+
     }
 
     @FXML
     private void buscarOfertas(MouseEvent event) {
-        
+
         try {
             if (!placas.getText().equals("")) {
                 Vehiculo.validarPlaca(this.vendedor.getVehiculos(), placas.getText());
                 ArrayList<Oferta> Nofertas = Oferta.searchByPlaca(this.myofertas, placas.getText());
                 if (Nofertas.isEmpty()) {
-                    Alert a = new Alert(Alert.AlertType.INFORMATION, "No existen ofertas para el vehiculo de placas"+placas.getText());
+                    Alert a = new Alert(Alert.AlertType.INFORMATION, "No existen ofertas para el vehiculo de placas" + placas.getText());
                     a.showAndWait();
                 } else {
-                    tableOferta.setItems(FXCollections.observableArrayList(Nofertas));
+                    tableOfertas.setItems(FXCollections.observableArrayList(Nofertas));
                 }
             } else {
                 Alert a = new Alert(Alert.AlertType.WARNING, "Debe ingresar una placa.");
                 a.showAndWait();
             }
-        } catch(NullPointerException ex){
-            
-        } catch(PlacaException ex){
+        } catch (NullPointerException ex) {
+
+        } catch (PlacaException ex) {
             Alert a = new Alert(Alert.AlertType.ERROR, "La placa ingresada no coincide con la placa de ninguno de los vehículos registrados a su nombre.");
             a.showAndWait();
         }
     }
 
-
     @FXML
     private void aceptarOferta(MouseEvent event) {
+        if (ofertaSel != null) {
+            try {
+                Oferta.Aceptar(this.ofertas, vehiculos, vehiculoSel);
+                Alert a = new Alert(Alert.AlertType.INFORMATION, "Oferta aceptada con éxito, se remitirá un mensaje al comprador a fin de que se ponga en contacto con usted.");
+                a.showAndWait();
+            } catch (IOException | NullPointerException ex) {
+            }
+        } else {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Debe seleccionar una oferta");
+            a.showAndWait();
+        }
     }
 
     @FXML
     private void declinarOferta(MouseEvent event) {
+        if (ofertaSel != null) {
+            try {
+                Oferta.eliminarOferta(this.ofertas, vehiculos, vehiculoSel);
+                Alert a = new Alert(Alert.AlertType.INFORMATION, "Oferta declinada con éxito.");
+                a.showAndWait();
+            } catch (IOException | NullPointerException ex) {
+            }
+        } else {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Debe seleccionar una oferta");
+            a.showAndWait();
+        }
     }
 
     @FXML
@@ -676,6 +734,58 @@ public class CyVController implements Initializable {
         }
     }
 
-   
+    @FXML
+    private void cargarFile(MouseEvent event) {
+        FileChooser fc = new FileChooser();
+
+        fc.getExtensionFilters().addAll(
+                new ExtensionFilter("All Images", "*.*"),
+                new ExtensionFilter("JPG", "*.jpg"),
+                new ExtensionFilter("PNG", "*.png")
+        );
+        fc.setTitle("Buscar imagen...");
+        File selectedFile = fc.showOpenDialog(new Stage());
+        if (selectedFile != null) {
+            Image image = new Image("file:" + selectedFile.getAbsolutePath());
+            img_cargar.setImage(image);
+            txt_ruta.setText(selectedFile.getAbsolutePath());
+        }
+    }
+
+    @FXML
+    private void ofertar(MouseEvent event) {
+        try {
+            if (this.vehiculoSel != null) {
+                if (!precioOfer.getText().equals("")) {
+                    double precioOfertado = Double.parseDouble(precioOfer.getText());
+                    Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Desea ofertar $" + precioOfertado + " por este vehículo?.");
+                    a.setTitle("SYSTEM-POO");
+                    a.setHeaderText("Confirmación de oferta");
+                    Optional<ButtonType> resultado = a.showAndWait();
+                    if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                        Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Oferta realizada con éxito.");
+                        a2.showAndWait();
+                        ArrayList<Vehiculo> Nvehiculos = (ArrayList<Vehiculo>) tablexOfertar.getItems();
+                        Nvehiculos.remove(vehiculoSel);
+                        Oferta.registrarNuevaOferta(vehiculoSel, comprador, this.ofertas, this.vehiculos, precioOfertado);
+                        tablexOfertar.setItems(FXCollections.observableArrayList(Nvehiculos));
+                    }
+                } else {
+                    Alert a = new Alert(Alert.AlertType.WARNING, "Para ofertar debe ingresar un precio a ofertar por el vehículo seleccionado.");
+                    a.show();
+                }
+            } else {
+                Alert a = new Alert(Alert.AlertType.WARNING, "Debe seleccionar un vehículo para ofertar.");
+                a.show();
+            }
+        } catch (NumberFormatException e) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Solo se puede ingresar números.");
+            a.showAndWait();
+        } catch (NullPointerException ex) {
+            Alert a = new Alert(Alert.AlertType.WARNING, "No existen vehículos para ese parámetro de búsqueda.");
+            a.show();
+        }
+
+    }
 
 }

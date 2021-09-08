@@ -24,7 +24,7 @@ public class App extends Application {
         stage.setTitle("SYSTEM-POO");
         stage.getIcons().add(new Image("img/icon.png"));
     }
-
+    
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }

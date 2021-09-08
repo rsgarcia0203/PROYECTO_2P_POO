@@ -80,6 +80,7 @@ public class RegisterController implements Initializable {
             a3.show();
         }
     }
+    
 
     public boolean resultado() {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Está seguro que desea registrarse con esos datos?");

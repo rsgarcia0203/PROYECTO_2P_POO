@@ -15,6 +15,7 @@ import ec.edu.espol.model.Vendedor;
 import ec.edu.espol.model.VendedorException;
 import ec.edu.espol.proyecto2p.App;
 import ec.edu.espol.util.Util;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -40,11 +41,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
 /**
  * FXML Controller class
@@ -166,7 +169,6 @@ public class VendedorController implements Initializable {
     private ArrayList<Vendedor> vendedores;
     private ArrayList<Oferta> myofertas;
     private ArrayList<Oferta> ofertasFile;
-    private Vehiculo vehiculoSel;
     private Oferta ofertaSel;
     @FXML
     private TextField txt_ruta;
@@ -203,15 +205,6 @@ public class VendedorController implements Initializable {
                 traccion_column.setCellValueFactory(new PropertyValueFactory<>("traccion"));
                 precio_column.setCellValueFactory(new PropertyValueFactory<>("precio"));
                 tableVehiculos.setItems(vehiculos);
-                tableVehiculos.setOnMouseClicked((MouseEvent e) -> {
-                    Vehiculo vehiculoSelec = tableVehiculos.getSelectionModel().getSelectedItem();
-                    if (vehiculoSelec != null) {
-                        setVehiculo(vehiculoSelec);
-                    } else {
-                        Alert a = new Alert(Alert.AlertType.WARNING, "Debe seleccionar un vehículo.");
-                        a.show();
-                    }
-                });
                 this.myofertas = this.vendedor.getOfertas();
                 this.myofertas.sort(Oferta::compareByPrecioOfertado);
                 ObservableList<Oferta> ofertas = FXCollections.observableArrayList(this.myofertas);
@@ -220,8 +213,8 @@ public class VendedorController implements Initializable {
                 placasO_column.setCellValueFactory(new PropertyValueFactory<>("placas"));
                 precioV_column.setCellValueFactory(new PropertyValueFactory<>("precioV"));
                 precioO_column.setCellValueFactory(new PropertyValueFactory<>("precioOfertado"));
-                tableVehiculos.setItems(vehiculos);
-                tableVehiculos.setOnMouseClicked((MouseEvent e) -> {
+                tableOfertas.setItems(ofertas);
+                tableOfertas.setOnMouseClicked((MouseEvent e) -> {
                     Oferta ofertaSeleccionada = tableOfertas.getSelectionModel().getSelectedItem();
                     if (ofertaSeleccionada != null) {
                         ofertaSel = ofertaSeleccionada;
@@ -319,6 +312,7 @@ public class VendedorController implements Initializable {
                         a.show();
                     } else {
                         Vehiculo v = new Vehiculo(id, this.vendedor.getID(), placa, marca, modelo, motor, año, recorrido, color, combustible, precio);
+                        v.setVendedor(this.vendedor);
                         registrarVehiculo(v);
                     }
 
@@ -339,6 +333,7 @@ public class VendedorController implements Initializable {
                         a.show();
                     } else {
                         Vehiculo v = new Vehiculo(id, this.vendedor.getID(), placa, marca, modelo, motor, año, recorrido, color, combustible, precio, transmision, vidrios);
+                        v.setVendedor(this.vendedor);
                         registrarVehiculo(v);
                     }
                 } else if (item.equals("Camioneta")) {
@@ -359,6 +354,7 @@ public class VendedorController implements Initializable {
                         a.show();
                     } else {
                         Vehiculo v = new Vehiculo(id, this.vendedor.getID(), placa, marca, modelo, motor, año, recorrido, color, combustible, precio, transmision, vidrios, traccion);
+                        v.setVendedor(this.vendedor);
                         registrarVehiculo(v);
                     }
                 }
@@ -379,6 +375,13 @@ public class VendedorController implements Initializable {
         Optional<ButtonType> resultado = a.showAndWait();
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             Vehiculo.registrarNuevoVehiculo(v, this.vehiculosFile);
+            for (Vendedor ven : this.vendedores) {
+                if (ven.equals(this.vendedor)) {
+                    ven.getVehiculos().add(v);
+                    Vendedor.saveListToFileSer("src\\main\\resources\\doc\\vendedores.ser", vendedores);
+                }
+            }
+            this.vendedor.getVehiculos().add(v);
             Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Vehiculo registrado con éxito.");
             a2.show();
         }
@@ -426,7 +429,7 @@ public class VendedorController implements Initializable {
                 Vehiculo.validarPlaca(this.vendedor.getVehiculos(), placas.getText());
                 ArrayList<Oferta> Nofertas = Oferta.searchByPlaca(this.myofertas, placas.getText());
                 if (Nofertas.isEmpty()) {
-                    Alert a = new Alert(Alert.AlertType.INFORMATION, "No existen ofertas para el vehiculo de placas"+placas.getText());
+                    Alert a = new Alert(Alert.AlertType.INFORMATION, "No existen ofertas para el vehiculo de placas" + placas.getText());
                     a.showAndWait();
                 } else {
                     Nofertas.sort(Oferta::compareByPrecioOfertado);
@@ -436,9 +439,9 @@ public class VendedorController implements Initializable {
                 Alert a = new Alert(Alert.AlertType.WARNING, "Debe ingresar una placa.");
                 a.showAndWait();
             }
-        } catch(NullPointerException ex){
-            
-        } catch(PlacaException ex){
+        } catch (NullPointerException ex) {
+
+        } catch (PlacaException ex) {
             Alert a = new Alert(Alert.AlertType.ERROR, "La placa ingresada no coincide con la placa de ninguno de los vehículos registrados a su nombre.");
             a.showAndWait();
         }
@@ -446,10 +449,32 @@ public class VendedorController implements Initializable {
 
     @FXML
     private void aceptarOferta(MouseEvent event) {
+        if(ofertaSel != null){
+            try {
+                Oferta.Aceptar(this.ofertas, vehiculos, vehiculoSel);
+                Alert a = new Alert(Alert.AlertType.INFORMATION, "Oferta aceptada con éxito, se remitirá un mensaje al comprador a fin de que se ponga en contacto con usted.");
+                a.showAndWait();
+            } catch (IOException | NullPointerException ex) {
+            }
+        } else {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Debe seleccionar una oferta");
+            a.showAndWait();
+        }
     }
 
     @FXML
     private void declinarOferta(MouseEvent event) {
+        if(ofertaSel != null){
+            try {
+                Oferta.eliminarOferta(this.ofertas, vehiculos, vehiculoSel);
+                Alert a = new Alert(Alert.AlertType.INFORMATION, "Oferta declinada con éxito.");
+                a.showAndWait();
+            } catch (IOException | NullPointerException ex) {
+            }
+        } else {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Debe seleccionar una oferta");
+            a.showAndWait();
+        }
     }
 
     @FXML
@@ -554,6 +579,17 @@ public class VendedorController implements Initializable {
 
     @FXML
     private void cargarFile(MouseEvent event) {
+        FileChooser fc = new FileChooser();
+
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("JPG & JPEG & PNG", "jpg", "jpeg", "png");
+        fc.setSelectedExtensionFilter(filter);
+        fc.setTitle("Buscar imagen...");
+        File selectedFile = fc.showOpenDialog(null);
+        if (selectedFile != null) {
+            Image image = new Image("file:" + selectedFile.getAbsolutePath());
+            img_cargar.setImage(image);
+            txt_ruta.setText(selectedFile.getAbsolutePath());
+        }
     }
 
 }
