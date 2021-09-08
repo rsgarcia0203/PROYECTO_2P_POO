@@ -262,6 +262,6 @@ public static void eliminarVendedor(ArrayList<Vendedor> vendedores, Vendedor ven
                 vendedores.get(i).setClave(Util.toHexString(Util.getSHA(clave)));
             }
         }
-        Vendedor.saveListToFileSer("src\\main\\resources\\doc\\compradores.ser", vendedores);
+        Vendedor.saveListToFileSer("src\\main\\resources\\doc\\vendedores.ser", vendedores);
     }
 }

@@ -551,7 +551,7 @@ public class VendedorController implements Initializable {
                             a.setHeaderText("Confirmación de datos de registro");
                             Optional<ButtonType> resultado = a.showAndWait();
                             if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                                this.vendedor.cambiarClave(vendedores, contra_nueva);
+                                this.vendedor.cambiarClave(this.vendedores, contra_nueva);
                                 Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Contraseña cambiada con éxito.");
                                 a2.showAndWait();
                                 toMain();
