@@ -292,12 +292,38 @@ public class Vehiculo implements Serializable{
         return null;
     }
     
+    public static void validarPlaca(ArrayList<Vehiculo> vehiculos, String placa)throws PlacaException{
+        boolean val = false;
+        for(Vehiculo v: vehiculos)
+        {
+            if(v.getPlaca().equals(placa))
+            {
+                val = true;
+            }
+        }
+        if (val == false){
+            throw new PlacaException("");
+        }
+    }
+    
+    public static ArrayList<Vehiculo> searchByPlaca(ArrayList<Vehiculo> vehiculos, String placa){
+        ArrayList<Vehiculo> xplaca = new ArrayList <>();
+        for(Vehiculo v: vehiculos)
+        {
+            if(v.getPlaca().equals(placa))
+            {
+                xplaca.add(v);
+            }
+        }
+        return xplaca;
+    }
+    
     public static ArrayList<Vehiculo> vehiculosxtipo(ArrayList<Vehiculo> vehiculos, String tipo)
     {
         ArrayList<Vehiculo> xtipo = new ArrayList <>();
         for(Vehiculo v: vehiculos)
         {
-            if(v.getTipo().equals(tipo))
+            if(v.getTipo().equals(tipo.toUpperCase()))
             {
                 xtipo.add(v);
             }
@@ -343,32 +369,17 @@ public class Vehiculo implements Serializable{
         }
         return xPrecio;
     }
-    
-    public void saveFile(String nomfile){
-        try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nomfile),true)))
-        {
-            pw.println(this.ID+"|"+this.tipo+"|"+this.IDvendedor+"|"+this.placa+"|"+this.marca+"|"+this.modelo+"|"+this.tipo_motor+"|"+this.año+"|"+this.recorrido+"|"+this.color+"|"+this.tipo_combustible+"|"+this.vidrios+"|"+this.transmision+"|"+this.traccion+"|"+this.precio);
-        }
-        catch(FileNotFoundException e){
-            System.out.println(e.getMessage());
-        }
-    }
-    
-     public static ArrayList<Vehiculo> readFile(String nomfile) throws FileNotFoundException{
-        ArrayList<Vehiculo> vehiculos = new ArrayList<>();
-        try(Scanner sc = new Scanner(new File(nomfile))){
-            while(sc.hasNextLine())
-            {
-                // linea = "1|20201010|eduardo|cruz"
-                String linea = sc.nextLine();
-                String[] tokens = linea.split("\\|");
-                Vehiculo v = new Vehiculo(Integer.parseInt(tokens[0]),tokens[1],Integer.parseInt(tokens[2]),tokens[3],tokens[4],tokens[5],tokens[6],Integer.parseInt(tokens[7]),Double.parseDouble(tokens[8]),tokens[9],tokens[10],tokens[11],tokens[12],tokens[13],Double.parseDouble(tokens[14]));
-                vehiculos.add(v);
+        
+      public static int nextID(ArrayList<Vehiculo> vehiculos){
+        int max = 0;
+        for(Vehiculo vehiculo: vehiculos){
+            if (vehiculo.getID() > max) {
+                max = vehiculo.getID();
             }
         }
-        return vehiculos;
+        return (max+1);        
     }
-    
+     
     public static void eliminarVehiculo(ArrayList<Vehiculo> vehiculos, Vehiculo vehiculo) throws IOException
     {
         for(int i = 0; i < vehiculos.size(); i++)
@@ -381,28 +392,15 @@ public class Vehiculo implements Serializable{
         Vehiculo.saveListToFileSer("src\\main\\resources\\doc\\vehiculos.ser", vehiculos);
 
     }
-    
-    public static int nextID(ArrayList<Vehiculo> vehiculos){
-        int max = 0;
-        for(Vehiculo vehiculo: vehiculos){
-            if (vehiculo.getID() > max) {
-                max = vehiculo.getID();
-            }
-        }
-        return (max+1);        
-    }
-    
-    public static void registrarNuevoComprador(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Comprador> compradores, String nomfile) throws CompradorException{
-        int id = Comprador.nextID(compradores); 
-        Comprador c = new Comprador(id, nombres, apellidos, organizacion, correo, clave);
-        if (compradores.contains(c) == false) {
-            compradores.add(c);
-            Comprador.saveListToFileSer("src\\main\\resources\\doc\\compradores.ser", compradores);
+        
+    public static void registrarNuevoVehiculo(Vehiculo vehiculo, ArrayList<Vehiculo> vehiculos) throws CompradorException{
+        if (vehiculos.contains(vehiculo) == false) {
+            vehiculos.add(vehiculo);
+            Vehiculo.saveListToFileSer("src\\main\\resources\\doc\\vehiculos.ser", vehiculos);
         } else {
-            throw new CompradorException("");
+            throw new VehiculoException("");
         }
 
-    }
     }
     
     public static void saveListToFileSer(String nomfile, ArrayList<Vehiculo> vehiculos){
@@ -419,14 +417,11 @@ public class Vehiculo implements Serializable{
         } 
     }
     
-    public static ArrayList<Vehiculo> readListFromFileSer(String nomfile){
+    public static ArrayList<Vehiculo> readListFromFileSer(String nomfile) throws FileNotFoundException{
         try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(nomfile)))){
             ArrayList<Vehiculo> vendedores = (ArrayList<Vehiculo>)in.readObject();
             in.close();
             return vendedores;
-        } catch (FileNotFoundException ex) {
-            Alert a = new Alert(Alert.AlertType.ERROR, "No se encontró el archivo.");
-            a.show();
         } catch (IOException | ClassNotFoundException ex) {
             Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo.");
             a.show();

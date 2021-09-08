@@ -6,11 +6,8 @@
 package ec.edu.espol.controller;
 
 import ec.edu.espol.model.Comprador;
-import ec.edu.espol.model.CompradorException;
-import ec.edu.espol.model.PasswordException;
 import ec.edu.espol.model.UserException;
 import ec.edu.espol.model.Vendedor;
-import ec.edu.espol.model.VendedorException;
 import ec.edu.espol.proyecto2p.App;
 import java.io.IOException;
 import java.net.URL;
@@ -107,18 +104,18 @@ public class RegisterController implements Initializable {
                 if (Comprador.validarRegistro(cor, compradores) == false || Vendedor.validarRegistro(cor, vendedores) == false) {
                     if (tipo.getSelectedToggle() == rb_comprador) {
                         if (resultado() == true) {
-                            Comprador.registrarNuevoComprador(nom, ape, org, cor, pas, this.compradores, "src\\main\\resources\\doc\\comprador.txt");
+                            Comprador.registrarNuevoComprador(nom, ape, org, cor, pas, this.compradores);
                             toMain();
                         }
                     } else if (tipo.getSelectedToggle() == rb_vendedor) {
                         if (resultado() == true) {
-                            Vendedor.registrarNuevoVendedor(nom, ape, org, cor, pas, this.vendedores, "src\\main\\resources\\doc\\vendedor.txt");
+                            Vendedor.registrarNuevoVendedor(nom, ape, org, cor, pas, this.vendedores);
                             toMain();
                         }
                     } else if (tipo.getSelectedToggle() == rb_ambos) {
                         if (resultado() == true) {
-                            Comprador.registrarNuevoComprador(nom, ape, org, cor, pas, this.compradores, "src\\main\\resources\\doc\\comprador.txt");
-                            Vendedor.registrarNuevoVendedor(nom, ape, org, cor, pas, this.vendedores, "src\\main\\resources\\doc\\vendedor.txt");
+                            Comprador.registrarNuevoComprador(nom, ape, org, cor, pas, this.compradores);
+                            Vendedor.registrarNuevoVendedor(nom, ape, org, cor, pas, this.vendedores);
                             toMain();
                         }
                     } else {

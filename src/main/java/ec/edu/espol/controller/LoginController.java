@@ -53,8 +53,8 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            this.compradores = Comprador.readFile("src\\main\\resources\\doc\\comprador.txt");
-            this.vendedores = Vendedor.readFile("src\\main\\resources\\doc\\vendedor.txt");
+            this.compradores = Comprador.readListFromFileSer("src\\main\\resources\\doc\\compradores.ser");
+            this.vendedores = Vendedor.readListFromFileSer("src\\main\\resources\\doc\\vendedores.ser");
             
         } catch (FileNotFoundException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "Documento no encontrado.");

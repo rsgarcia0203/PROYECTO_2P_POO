@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.Scanner;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Objects;
 import javafx.scene.control.Alert;
 
 /**
@@ -107,28 +108,31 @@ public class Vendedor implements Serializable{
         this.vehiculos = vehiculos;
     }
 
-    public void saveFile(String nomFile) {
-        try (PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nomFile), true))) {
-            pw.println(this.ID + "|" + this.nombres + "|" + this.apellidos + "|" + this.organizacion + "|" + this.correo + "|" + Util.toHexString(Util.getSHA(this.clave)));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 41 * hash + Objects.hashCode(this.correo);
+        return hash;
     }
 
-    public static ArrayList<Vendedor> readFile(String nomFile) throws FileNotFoundException {
-
-        ArrayList<Vendedor> vendedor = new ArrayList<>();
-        try (Scanner sc = new Scanner(new File(nomFile))) {
-            while (sc.hasNextLine()) {
-                String linea = sc.nextLine();
-                String[] arreglo = linea.split("\\|");
-                Vendedor v = new Vendedor(Integer.parseInt(arreglo[0]), arreglo[1], arreglo[2], arreglo[3], arreglo[4], arreglo[5]);
-                vendedor.add(v);
-            }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-        return vendedor;
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Vendedor other = (Vendedor) obj;
+        if (!Objects.equals(this.correo, other.correo)) {
+            return false;
+        }
+        return true;
     }
-
+        
     public static Vendedor searchByID(ArrayList<Vendedor> vendedores, int id) {
         for (Vendedor v : vendedores) {
             if (v.ID == id) {
@@ -137,7 +141,7 @@ public class Vendedor implements Serializable{
         }
         return null;
     }
-    public static Vendedor validarUsuario(String correo, String clave, ArrayList<Vendedor> vendedores) throws PasswordException, UserException, NoSuchAlgorithmException{
+    public static Vendedor validarUsuario(String correo, String clave, ArrayList<Vendedor> vendedores) throws PasswordException, NoSuchAlgorithmException{
          boolean validarcorreo = false;
         boolean validarclave = false;
         Vendedor vendedor = null;
@@ -160,8 +164,18 @@ public class Vendedor implements Serializable{
             }
         } else {
             return vendedor;
-            //throw new UserException("UserException");
         }
+    }
+    public ArrayList<Oferta> getOfertas(){
+        ArrayList<Oferta> ofertas = new ArrayList<>();
+        for(Vehiculo vehiculo: this.getVehiculos()){
+            if(!vehiculo.getOfertas().isEmpty()){
+                for(Oferta o: vehiculo.getOfertas()){
+                    ofertas.add(o);
+                }
+            }
+        }
+        return ofertas;
     }
     
     public static boolean validarRegistro(String correo, ArrayList<Vendedor> vendedores) throws  UserException, NoSuchAlgorithmException{
@@ -188,7 +202,7 @@ public static void eliminarVendedor(ArrayList<Vendedor> vendedores, Vendedor ven
                 vendedores.remove(i);
             }
         }
-        Vendedor.saveListToFileSer("src\\main\\resources\\doc\\compradores.ser", vendedores);
+        Vendedor.saveListToFileSer("src\\main\\resources\\doc\\vendedores.ser", vendedores);
 
     }
     
@@ -202,14 +216,14 @@ public static void eliminarVendedor(ArrayList<Vendedor> vendedores, Vendedor ven
         return (max+1);        
     }
     
-    public static void registrarNuevoVendedor(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Vendedor> vendedores, String nomfile) throws VendedorException{
+    public static void registrarNuevoVendedor(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Vendedor> vendedores) throws VendedorException{
         int id = Vendedor.nextID(vendedores); 
         Vendedor v = new Vendedor(id, nombres, apellidos, organizacion, correo, clave);
         if (vendedores.contains(v) == false) {
             vendedores.add(v);
             Vendedor.saveListToFileSer("src\\main\\resources\\doc\\vendedores.ser", vendedores);
         } else {
-            throw new CompradorException("");
+            throw new VendedorException("");
         }
 
     }
@@ -228,14 +242,11 @@ public static void eliminarVendedor(ArrayList<Vendedor> vendedores, Vendedor ven
         } 
     }   
         
-    public static ArrayList<Vendedor> readListFromFileSer(String nomfile){
+    public static ArrayList<Vendedor> readListFromFileSer(String nomfile) throws FileNotFoundException{
         try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(nomfile)))){
             ArrayList<Vendedor> vendedores = (ArrayList<Vendedor>)in.readObject();
             in.close();
             return vendedores;
-        } catch (FileNotFoundException ex) {
-            Alert a = new Alert(Alert.AlertType.ERROR, "No se encontró el archivo.");
-            a.show();
         } catch (IOException | ClassNotFoundException ex) {
             Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo.");
             a.show();
@@ -243,4 +254,14 @@ public static void eliminarVendedor(ArrayList<Vendedor> vendedores, Vendedor ven
         return null;
     }
 
+    public void cambiarClave(ArrayList<Vendedor> vendedores, String clave) throws NoSuchAlgorithmException{
+        for(int i = 0; i < vendedores.size(); i++)
+        {
+            if (vendedores.get(i).equals(this))
+            {
+                vendedores.get(i).setClave(Util.toHexString(Util.getSHA(clave)));
+            }
+        }
+        Vendedor.saveListToFileSer("src\\main\\resources\\doc\\compradores.ser", vendedores);
+    }
 }

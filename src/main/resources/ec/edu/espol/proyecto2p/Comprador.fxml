@@ -28,26 +28,30 @@
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <Label layoutX="471.0" layoutY="182.0" text="BIENVENIDO" textFill="WHITE">
-                     <font>
-                        <Font name="Open Sans SemiBold" size="55.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="lbl_nombre" contentDisplay="CENTER" layoutX="253.0" layoutY="291.0" text="BIENVENIDO" textFill="WHITE">
-                     <font>
-                        <Font name="Open Sans SemiBold" size="55.0" />
-                     </font>
-                  </Label>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="564.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../img/icon.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="302.0" fitWidth="620.0" layoutX="370.0" layoutY="418.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../img/compraventa2.jpg" />
-                     </image>
-                  </ImageView>
+                  <VBox alignment="CENTER" layoutX="-4.0" layoutY="13.0" prefHeight="744.0" prefWidth="1280.0" spacing="20.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../img/icon.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="BIENVENIDO" textFill="WHITE">
+                           <font>
+                              <Font name="Open Sans SemiBold" size="55.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbl_nombre" contentDisplay="CENTER" text="USER" textFill="WHITE">
+                           <font>
+                              <Font name="Open Sans SemiBold" size="55.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="302.0" fitWidth="620.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../img/compraventa2.jpg" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </VBox>
                </children></AnchorPane>
       </content>
     </Tab>
@@ -66,9 +70,9 @@
                      <children>
                         <TableView fx:id="tableOfertas" prefHeight="647.0" prefWidth="668.0" styleClass="table" GridPane.columnIndex="1">
                            <columns>
-                              <TableColumn fx:id="id_column" prefWidth="32.0" styleClass="table_txt" text="ID" />
-                              <TableColumn fx:id="tipos_column" prefWidth="75.0" styleClass="table_txt" text="TIPO" />
-                              <TableColumn fx:id="placas_column" prefWidth="73.0" styleClass="table_txt" text="PLACAS" />
+                              <TableColumn fx:id="id_column" prefWidth="19.0" styleClass="table_txt" text="ID" />
+                              <TableColumn fx:id="tipos_column" prefWidth="91.0" styleClass="table_txt" text="TIPO" />
+                              <TableColumn fx:id="placas_column" prefWidth="70.0" styleClass="table_txt" text="PLACAS" />
                               <TableColumn fx:id="marca_column" prefWidth="109.0" styleClass="table_txt" text="MARCA" />
                               <TableColumn fx:id="modelo_column" prefWidth="128.0" styleClass="table_txt" text="MODELO" />
                               <TableColumn fx:id="motor_column" prefWidth="114.0" styleClass="table_txt" text="MOTOR" />
@@ -87,7 +91,7 @@
                         </TableView>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                            <children>
-                              <ComboBox fx:id="cbx_tipos" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="250.0" promptText="Tipo" styleClass="comboBox">
+                              <ComboBox fx:id="cbx_tipos" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#cambiar" prefHeight="40.0" prefWidth="250.0" promptText="Tipo" styleClass="comboBox">
                                  <VBox.margin>
                                     <Insets bottom="10.0" />
                                  </VBox.margin>
@@ -171,11 +175,12 @@
                                     <TextField fx:id="precioOfer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="190.0" promptText="0" styleClass="tf_box2" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                                  </children>
                               </GridPane>
-                              <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#buscar" prefHeight="42.0" prefWidth="120.0" styleClass="button2" text="Buscar">
-                                 <VBox.margin>
-                                    <Insets top="30.0" />
-                                 </VBox.margin>
-                              </Button>
+                              <HBox alignment="CENTER" prefHeight="55.0" prefWidth="364.0" spacing="30.0">
+                                 <children>
+                                    <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#buscar" prefHeight="42.0" prefWidth="120.0" styleClass="btn2-1" text="Buscar" />
+                                    <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#ofertar" prefHeight="42.0" prefWidth="120.0" styleClass="btn2-1" text="Ofertar" />
+                                 </children>
+                              </HBox>
                            </children>
                         </VBox>
                      </children>
@@ -332,4 +337,3 @@
     </Tab>
   </tabs>
 </TabPane>
-

@@ -162,13 +162,13 @@ public class CyVController implements Initializable {
     @FXML
     private TextField precioOfer;
     @FXML
-    private TableView<?> tableOfertas;
+    private TableView<Oferta> tableOfertas;
     @FXML
-    private TableColumn<?, ?> idO_column;
+    private TableColumn<Oferta, Integer> idO_column;
     @FXML
-    private TableColumn<?, ?> tiposO_column;
+    private TableColumn<Oferta, String> tiposO_column;
     @FXML
-    private TableColumn<?, ?> placasO_column;
+    private TableColumn<Oferta, String> placasO_column;
     @FXML
     private TableColumn<?, ?> marcaO_column;
     @FXML
@@ -220,6 +220,7 @@ public class CyVController implements Initializable {
     private ArrayList<Vehiculo> vehiculosFile;
     private Vendedor vendedor;
     private Vehiculo vehiculoSel;
+    private ArrayList<Oferta> ofertasFile;
 
     /**
      * Initializes the controller class.
@@ -233,7 +234,8 @@ public class CyVController implements Initializable {
             tipos.add("Motocicleta");
             tipos.add("Camioneta");
             cbx_tipos.setItems(FXCollections.observableArrayList(tipos));
-            this.vehicles = Vehiculo.readFile("src\\main\\resources\\doc\\vehiculo.txt");
+            this.vehiculosFile = Vehiculo.readListFromFileSer("src\\main\\resources\\doc\\vehiculo.txt");
+            this.ofertasFile = Oferta.readListFromFileSer("src\\main\\resources\\doc\\oferta.ser");
             ObservableList<Vehiculo> vehiculos = FXCollections.observableArrayList(this.vehicles);
             id_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
             tipos_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
@@ -262,10 +264,10 @@ public class CyVController implements Initializable {
                         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
                             Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Rol cambiado con éxito.");
                             a2.showAndWait();
-                            ArrayList<Vehiculo> Nvehiculos = (ArrayList<Vehiculo>) tableOfertas.getItems();
-                            Nvehiculos.remove(vehiculoSel);
-                            Oferta.registrarNuevaOferta(vehiculoSel, comprador, precioOfertado, "oferta.txt");
-                            tablexOfertar.setItems(FXCollections.observableArrayList(Nvehiculos));
+                            //ArrayList<Vehiculo> Nvehiculos = (ArrayList<Vehiculo>) tableOfertas.getItems();
+                            //Nvehiculos.remove(vehiculoSel);
+                            //.registrarNuevaOferta(vehiculoSel, comprador, precioOfertado, "oferta.txt");
+                            //tablexOfertar.setItems(FXCollections.observableArrayList(Nvehiculos));
                         }
                     } else {
                         Alert a = new Alert(Alert.AlertType.WARNING, "Para ofertar debe ingresar un precio a ofertar por el vehículo seleccionado.");
@@ -353,10 +355,9 @@ public class CyVController implements Initializable {
         a.setHeaderText("Confirmación de datos de registro");
         Optional<ButtonType> resultado = a.showAndWait();
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            v.saveFile("src\\main\\resources\\doc\\vehiculo.txt");
+            Vehiculo.registrarNuevoVehiculo(v, this.vehiculosFile);
             Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Vehiculo registrado con éxito.");
-            a2.showAndWait();
-            toMain();
+            a2.show();
         }
     }
 
@@ -495,7 +496,7 @@ public class CyVController implements Initializable {
                 a.setHeaderText("Confirmación de datos de registro");
                 Optional<ButtonType> resultado = a.showAndWait();
                 if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                    Comprador.registrarNuevoComprador(this.vendedor.getNombres(), this.vendedor.getApellidos(), this.vendedor.getOrganizacion(), this.vendedor.getCorreo(), this.vendedor.getClave(), this.compradores, "src\\main\\resources\\doc\\vendedor.txt");
+                    Comprador.registrarNuevoComprador(this.vendedor.getNombres(), this.vendedor.getApellidos(), this.vendedor.getOrganizacion(), this.vendedor.getCorreo(), this.vendedor.getClave(), this.compradores);
                     Vendedor.eliminarVendedor(vendedores, vendedor);
                     Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Rol cambiado con éxito.");
                     a2.showAndWait();
@@ -507,7 +508,7 @@ public class CyVController implements Initializable {
                 a.setHeaderText("Confirmación de datos de registro");
                 Optional<ButtonType> resultado = a.showAndWait();
                 if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                    Vendedor.registrarNuevoVendedor(this.vendedor.getNombres(), this.vendedor.getApellidos(), this.vendedor.getOrganizacion(), this.vendedor.getCorreo(), this.vendedor.getClave(), this.vendedores, "src\\main\\resources\\doc\\vendedor.txt");
+                    Vendedor.registrarNuevoVendedor(this.vendedor.getNombres(), this.vendedor.getApellidos(), this.vendedor.getOrganizacion(), this.vendedor.getCorreo(), this.vendedor.getClave(), this.vendedores);
                     Comprador.eliminarComprador(compradores, comprador);
                     Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Rol cambiado con éxito.");
                     a2.showAndWait();

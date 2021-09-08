@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -128,6 +129,9 @@ public class CompradorController implements Initializable {
     private ArrayList<Vehiculo> vehicles;
     @FXML
     private TextField precioOfer;
+    private Vehiculo vehiculoSel;
+    private ArrayList<Oferta> ofertas;
+    ArrayList<Vehiculo> vehiculos;
 
     /**
      * Initializes the controller class.
@@ -144,10 +148,11 @@ public class CompradorController implements Initializable {
             tipos.add("Motocicleta");
             tipos.add("Camioneta");
             cbx_tipos.setItems(FXCollections.observableArrayList(tipos));
-            this.vehicles = Vehiculo.readFile("src\\main\\resources\\doc\\vehiculo.txt");
+            this.vehicles = Vehiculo.readListFromFileSer("src\\main\\resources\\doc\\vehiculos.ser");
+            this.ofertas = Oferta.readListFromFileSer("src\\main\\resources\\doc\\oferta.ser");
             System.out.println(this.vehicles);
-            ObservableList<Vehiculo> vehiculos = FXCollections.observableArrayList(this.vehicles);
-            tableOfertas.setItems(vehiculos);
+            ObservableList<Vehiculo> vehiculosObs = FXCollections.observableArrayList(this.vehicles);
+            tableOfertas.setItems(vehiculosObs);
             id_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
             tipos_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
             placas_column.setCellValueFactory(new PropertyValueFactory<>("placa"));
@@ -163,35 +168,13 @@ public class CompradorController implements Initializable {
             traccion_column.setCellValueFactory(new PropertyValueFactory<>("traccion"));
             precio_column.setCellValueFactory(new PropertyValueFactory<>("precio"));
             tableOfertas.setOnMouseClicked((MouseEvent e) -> {
-                Vehiculo vehiculoSel = tableOfertas.getSelectionModel().getSelectedItem();
-                if (vehiculoSel != null) {
-                    if (!precioOfer.getText().equals("")) {
-                        double precioOfertado = Double.parseDouble(precioOfer.getText());
-                        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Desea ofertar $" + precioOfertado + " por este vehículo?.");
-                        a.setTitle("SYSTEM-POO");
-                        a.setHeaderText("Confirmación de oferta");
-                        Optional<ButtonType> resultado = a.showAndWait();
-                        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                            Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Rol cambiado con éxito.");
-                            a2.showAndWait();
-                            ArrayList<Vehiculo> Nvehiculos = (ArrayList<Vehiculo>) tableOfertas.getItems();
-                            Nvehiculos.remove(vehiculoSel);
-                            Oferta.registrarNuevaOferta(vehiculoSel, comprador, precioOfertado, "oferta.txt");
-                            tableOfertas.setItems(FXCollections.observableArrayList(Nvehiculos));
-                        }
-                    } else {
-                        Alert a = new Alert(Alert.AlertType.WARNING, "Para ofertar debe ingresar un precio a ofertar por el vehículo seleccionado.");
-                        a.show();
-                    }
-                } else {
-                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe seleccionar un vehículo.");
-                    a.show();
-                }
+                Vehiculo vehiculoSeleccionado = tableOfertas.getSelectionModel().getSelectedItem();
+                this.vehiculoSel = vehiculoSeleccionado;
             });
         } catch (FileNotFoundException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "Documento no encontrado.");
             a.show();
-        } catch (NullPointerException ex){
+        } catch (NullPointerException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "No existen vehículos para ese parámetro de búsqueda.");
             a.show();
         }
@@ -219,6 +202,7 @@ public class CompradorController implements Initializable {
         try {
             FXMLLoader fxmlloader = App.loadFXMLoader("Login");
             App.setRoot(fxmlloader);
+
         } catch (IOException ex) {
             Alert a3 = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo del siguiente grafo de scene");
             a3.show();
@@ -253,7 +237,7 @@ public class CompradorController implements Initializable {
                 a.setHeaderText("Confirmación de datos de registro");
                 Optional<ButtonType> resultado = a.showAndWait();
                 if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                    Vendedor.registrarNuevoVendedor(this.comprador.getNombres(), this.comprador.getApellidos(), this.comprador.getOrganizacion(), this.comprador.getCorreo(), this.comprador.getClave(), this.vendedores, "src\\main\\resources\\doc\\vendedor.txt");
+                    Vendedor.registrarNuevoVendedor(this.comprador.getNombres(), this.comprador.getApellidos(), this.comprador.getOrganizacion(), this.comprador.getCorreo(), this.comprador.getClave(), this.vendedores);
                     Comprador.eliminarComprador(compradores, comprador);
                     Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Rol cambiado con éxito.");
                     a2.showAndWait();
@@ -265,7 +249,7 @@ public class CompradorController implements Initializable {
                 a.setHeaderText("Confirmación de datos de registro");
                 Optional<ButtonType> resultado = a.showAndWait();
                 if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                    Vendedor.registrarNuevoVendedor(this.comprador.getNombres(), this.comprador.getApellidos(), this.comprador.getOrganizacion(), this.comprador.getCorreo(), this.comprador.getClave(), this.vendedores, "src\\main\\resources\\doc\\vendedor.txt");
+                    Vendedor.registrarNuevoVendedor(this.comprador.getNombres(), this.comprador.getApellidos(), this.comprador.getOrganizacion(), this.comprador.getCorreo(), this.comprador.getClave(), this.vendedores);
                     Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Rol cambiado con éxito.");
                     a2.showAndWait();
                     toMain();
@@ -294,19 +278,24 @@ public class CompradorController implements Initializable {
         } else {
             try {
                 if (this.comprador.getClave().equals(Util.toHexString(Util.getSHA(contra_anterior)))) {
-                    if (contra_nueva.equals(contra_confirmada)) {
-                        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Está seguro de cambiar su contraseña actual?.");
-                        a.setTitle("SYSTEM-POO");
-                        a.setHeaderText("Confirmación de datos de registro");
-                        Optional<ButtonType> resultado = a.showAndWait();
-                        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                            this.comprador.setClave(contra_nueva);
-                            Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Contraseña cambiada con éxito.");
-                            a2.showAndWait();
-                            toMain();
+                    if (contra_nueva.equals(contra_anterior)) {
+                        if (contra_nueva.equals(contra_confirmada)) {
+                            Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Está seguro de cambiar su contraseña actual?.");
+                            a.setTitle("SYSTEM-POO");
+                            a.setHeaderText("Confirmación de datos de registro");
+                            Optional<ButtonType> resultado = a.showAndWait();
+                            if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                                this.comprador.cambiarClave(compradores, contra_nueva);
+                                Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Contraseña cambiada con éxito.");
+                                a2.showAndWait();
+                                toMain();
+                            }
+                        } else {
+                            Alert a = new Alert(Alert.AlertType.ERROR, "La nueva contraseña no coincide con la indicada en el campo de confirmación. Escríbala de nuevo. En las contraseñas, debe escribir las letras mayúsculas y minúsculas correctamente.");
+                            a.show();
                         }
                     } else {
-                        Alert a = new Alert(Alert.AlertType.ERROR, "La nueva contraseña no coincide con la indicada en el campo de confirmación. Escríbala de nuevo. En las contraseñas, debe escribir las letras mayúsculas y minúsculas correctamente.");
+                        Alert a = new Alert(Alert.AlertType.ERROR, "La nueva contraseña no puede ser igual a la anterior. Escríbala de nuevo. En las contraseñas, debe escribir las letras mayúsculas y minúsculas correctamente.");
                         a.show();
                     }
                 } else {
@@ -314,69 +303,61 @@ public class CompradorController implements Initializable {
                     a.show();
                 }
             } catch (NoSuchAlgorithmException ex) {
-                ex.printStackTrace();
+
             }
         }
     }
-    
+
     @FXML
     private void buscar(MouseEvent event) {
         try {
-            double recorridoInicial = Double.parseDouble(recorridoIni.getPromptText());
-            double recorridoFinal = Double.parseDouble(recorridoFin.getPromptText());
-            if (!recorridoIni.getText().equals("") && !recorridoFin.getText().equals("")) {
-                recorridoInicial = Double.parseDouble(recorridoIni.getText());
-                recorridoFinal = Double.parseDouble(recorridoFin.getText());
-            } else if((!recorridoIni.getText().equals("") && recorridoFin.getText().equals("")) || (recorridoIni.getText().equals("") && !recorridoFin.getText().equals(""))){
-                Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
-                a.setTitle("SYSTEM-POO");
-                a.setHeaderText("Rangos de recorridos.");
+            if (recorridoIni.getText().equals("") && recorridoFin.getText().equals("") && anioIni.getText().equals("") && anioFin.getText().equals("") && precioIni.getText().equals("") && precioFin.getText().equals("") && precioOfer.getText().equals("")) {
+                Alert a = new Alert(Alert.AlertType.ERROR, "Debe llenar al menos un parámetro antes de dar clic en buscar.");
                 a.showAndWait();
             } else {
-                recorridoInicial = Double.parseDouble(recorridoIni.getPromptText());
-                recorridoFinal = Double.parseDouble(recorridoFin.getPromptText());
-            }
-
-            int añoInicial = Integer.parseInt(anioIni.getPromptText());
-            int añoFinal = Integer.parseInt(anioFin.getPromptText());
-            if (!anioIni.getText().equals("") && !anioFin.getText().equals("")) {
-                añoInicial = Integer.parseInt(anioIni.getText());
-                añoFinal = Integer.parseInt(anioFin.getText());
-            } else if((!anioIni.getText().equals("") && anioFin.getText().equals("")) || (anioIni.getText().equals("") && !anioFin.getText().equals(""))){
-                Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
-                a.setTitle("SYSTEM-POO");
-                a.setHeaderText("Rangos de años.");
-                a.showAndWait();
-            } else {
-                añoInicial = Integer.parseInt(anioIni.getPromptText());
-                añoFinal = Integer.parseInt(anioFin.getPromptText());
-            }
-
-            double precioInicial = Double.parseDouble(precioIni.getPromptText());
-            double precioFinal = Double.parseDouble(precioFin.getPromptText());
-            if (!precioIni.getText().equals("") && !precioFin.getText().equals("")) {
-                precioInicial = Double.parseDouble(precioIni.getText());
-                precioFinal = Double.parseDouble(precioFin.getText());
-            } else if((!precioIni.getText().equals("") && precioFin.getText().equals("")) || (precioIni.getText().equals("") && !precioFin.getText().equals("")) ){
-                Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
-                a.setTitle("SYSTEM-POO");
-                a.setHeaderText("Rangos de precios.");
-                a.showAndWait();
-            } else {
-                precioInicial = Double.parseDouble(precioIni.getPromptText());
-                precioFinal = Double.parseDouble(precioFin.getPromptText());
-            }
-            
-            String item = (String) cbx_tipos.getValue();
-            if (item != null) {
-                ArrayList<Vehiculo> vehiculos = this.vehicles;
-
-                if (!item.equals("Todos")) {
-                    vehiculos = Vehiculo.vehiculosxtipo(vehiculos, item);
-                    tableOfertas.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxtipo(vehiculos, item)));
+                double recorridoInicial = Double.parseDouble(recorridoIni.getPromptText());
+                double recorridoFinal = Double.parseDouble(recorridoFin.getPromptText());
+                if (!recorridoIni.getText().equals("") && !recorridoFin.getText().equals("")) {
+                    recorridoInicial = Double.parseDouble(recorridoIni.getText());
+                    recorridoFinal = Double.parseDouble(recorridoFin.getText());
+                } else if ((!recorridoIni.getText().equals("") && recorridoFin.getText().equals("")) || (recorridoIni.getText().equals("") && !recorridoFin.getText().equals(""))) {
+                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
+                    a.setTitle("SYSTEM-POO");
+                    a.setHeaderText("Rangos de recorridos.");
+                    a.showAndWait();
                 } else {
-                    vehiculos = this.vehicles;
-                    tableOfertas.setItems(FXCollections.observableArrayList(vehiculos));
+                    recorridoInicial = Double.parseDouble(recorridoIni.getPromptText());
+                    recorridoFinal = Double.parseDouble(recorridoFin.getPromptText());
+                }
+
+                int añoInicial = Integer.parseInt(anioIni.getPromptText());
+                int añoFinal = Integer.parseInt(anioFin.getPromptText());
+                if (!anioIni.getText().equals("") && !anioFin.getText().equals("")) {
+                    añoInicial = Integer.parseInt(anioIni.getText());
+                    añoFinal = Integer.parseInt(anioFin.getText());
+                } else if ((!anioIni.getText().equals("") && anioFin.getText().equals("")) || (anioIni.getText().equals("") && !anioFin.getText().equals(""))) {
+                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
+                    a.setTitle("SYSTEM-POO");
+                    a.setHeaderText("Rangos de años.");
+                    a.showAndWait();
+                } else {
+                    añoInicial = Integer.parseInt(anioIni.getPromptText());
+                    añoFinal = Integer.parseInt(anioFin.getPromptText());
+                }
+
+                double precioInicial = Double.parseDouble(precioIni.getPromptText());
+                double precioFinal = Double.parseDouble(precioFin.getPromptText());
+                if (!precioIni.getText().equals("") && !precioFin.getText().equals("")) {
+                    precioInicial = Double.parseDouble(precioIni.getText());
+                    precioFinal = Double.parseDouble(precioFin.getText());
+                } else if ((!precioIni.getText().equals("") && precioFin.getText().equals("")) || (precioIni.getText().equals("") && !precioFin.getText().equals(""))) {
+                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
+                    a.setTitle("SYSTEM-POO");
+                    a.setHeaderText("Rangos de precios.");
+                    a.showAndWait();
+                } else {
+                    precioInicial = Double.parseDouble(precioIni.getPromptText());
+                    precioFinal = Double.parseDouble(precioFin.getPromptText());
                 }
 
                 if (recorridoInicial != 0 && recorridoFinal != 0) {
@@ -393,27 +374,74 @@ public class CompradorController implements Initializable {
                     vehiculos = Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal);
                     tableOfertas.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal)));
                 }
-                
-                if (!vehiculos.isEmpty()) {
-                    double precioOfertado = Double.parseDouble(precioOfer.getText());
-                    
-                } else {
+
+                if (vehiculos.isEmpty()) {
                     Alert a = new Alert(Alert.AlertType.INFORMATION, "No existen vehículos con esos parametros de búsqueda.");
                     a.showAndWait();
                 }
-            } else {
-                Alert a = new Alert(Alert.AlertType.WARNING, "Debe elegir un tipo.");
-                a.showAndWait();
             }
         } catch (NumberFormatException e) {
             Alert a = new Alert(Alert.AlertType.ERROR, "Solo se puede ingresar números.");
             a.showAndWait();
-        } catch (NullPointerException ex){
+        } catch (NullPointerException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "No existen vehículos para ese parámetro de búsqueda.");
             a.show();
         }
 
+    }
+
+    @FXML
+    private void ofertar(MouseEvent event) {
+        try {
+            if (this.vehiculoSel != null) {
+                if (!precioOfer.getText().equals("")) {
+                    double precioOfertado = Double.parseDouble(precioOfer.getText());
+                    Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Desea ofertar $" + precioOfertado + " por este vehículo?.");
+                    a.setTitle("SYSTEM-POO");
+                    a.setHeaderText("Confirmación de oferta");
+                    Optional<ButtonType> resultado = a.showAndWait();
+                    if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                        Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Oferta realizada con éxito.");
+                        a2.showAndWait();
+                        ArrayList<Vehiculo> Nvehiculos = (ArrayList<Vehiculo>) tableOfertas.getItems();
+                        Nvehiculos.remove(vehiculoSel);
+                        Oferta.registrarNuevaOferta(vehiculoSel, comprador, this.ofertas, precioOfertado);
+                        tableOfertas.setItems(FXCollections.observableArrayList(Nvehiculos));
+                    }
+                } else {
+                    Alert a = new Alert(Alert.AlertType.WARNING, "Para ofertar debe ingresar un precio a ofertar por el vehículo seleccionado.");
+                    a.show();
+                }
+            } else {
+                Alert a = new Alert(Alert.AlertType.WARNING, "Debe seleccionar un vehículo para ofertar.");
+                a.show();
+            }
+        } catch (NumberFormatException e) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Solo se puede ingresar números.");
+            a.showAndWait();
+        } catch (NullPointerException ex) {
+            Alert a = new Alert(Alert.AlertType.WARNING, "No existen vehículos para ese parámetro de búsqueda.");
+            a.show();
+        }
 
     }
 
+    @FXML
+    private void cambiar(ActionEvent event) {
+        String item = (String) cbx_tipos.getValue();
+        if (item != null) {
+
+            if (!item.equals("Todos")) {
+                vehiculos = Vehiculo.vehiculosxtipo(this.vehicles, item);
+                tableOfertas.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxtipo(vehiculos, item)));
+            } else {
+                vehiculos = this.vehicles;
+                tableOfertas.setItems(FXCollections.observableArrayList(vehiculos));
+            }
+
+        } else {
+            Alert a = new Alert(Alert.AlertType.WARNING, "Debe elegir un tipo.");
+            a.showAndWait();
+        }
+    }
 }

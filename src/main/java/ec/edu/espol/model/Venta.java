@@ -86,31 +86,30 @@ public class Venta implements Serializable{
     public void setVehiculo(Vehiculo vehiculo) {
         this.vehiculo = vehiculo;
     }
-    
-    public void saveFile(String nomfile){
-        try(PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nomfile),true)))
-        {
-            pw.println(this.ID+"|"+this.idVendedor+"|"+this.idVehiculo+"|"+this.tipo);
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-        }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 43 * hash + this.idVehiculo;
+        return hash;
     }
-    public static ArrayList<Venta> readFile(String nomfile){
-        ArrayList<Venta> ingresos = new ArrayList<>();
-        try(Scanner sc = new Scanner(new File(nomfile))){
-            while(sc.hasNextLine())
-            {
-                String linea = sc.nextLine();
-                String[] tokens = linea.split("\\|");
-                Venta i = new Venta(Integer.parseInt(tokens[0]),Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), tokens[3]);
-                ingresos.add(i);
-            }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-        catch(Exception e){
-            System.out.println(e.getMessage());
+        if (obj == null) {
+            return false;
         }
-        return ingresos;
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Venta other = (Venta) obj;
+        if (this.idVehiculo != other.idVehiculo) {
+            return false;
+        }
+        return true;
     }
     
     public static int nextID(ArrayList<Venta> ventas){
@@ -127,22 +126,15 @@ public class Venta implements Serializable{
         int ID = Venta.nextID(ventas);
         int idvehiculo = vehiculo.getID();
         int idvendedor = vehiculo.getIDvendedor();
-        Venta v =new Venta(ID,idvendedor,idvehiculo,vehiculo.getTipo());
-        v.saveFile(nomfile); 
-    }
-    
-    public static void link(ArrayList<Vendedor> vendedores, ArrayList<Vehiculo> vehiculos, ArrayList<Venta> ingresos){
-        for(Venta i: ingresos){
-            Vendedor v = Vendedor.searchByID(vendedores, i.getIdVendedor());
-            Vehiculo vh = Vehiculo.searchByID(vehiculos, i.getIdVehiculo());
-            v.getVehiculos().add(vh);
-            vh.setVendedor(v);
-            i.setVendedor(v);
-            i.setVehiculo(vh);      
+        Venta v = new Venta(ID,idvendedor,idvehiculo,vehiculo.getTipo());
+        if(!ventas.contains(v)){
+            Venta.saveListToFileSer("src\\main\\resources\\doc\\venta.ser", ventas);
+        } else {
+            throw new VentaException("");
         }
     }
     
-    public static void eliminarIngreso(ArrayList<Venta> ingresos, Vehiculo vehiculo) throws IOException
+    public static void eliminarIngreso(ArrayList<Venta> ingresos, Vehiculo vehiculo)
     {
         for(int i = 0; i < ingresos.size(); i++)
         {

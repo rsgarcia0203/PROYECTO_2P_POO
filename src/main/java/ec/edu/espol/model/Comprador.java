@@ -92,7 +92,7 @@ public class Comprador implements Serializable{
     
     public static Comprador validarUsuario(String correo, String clave, ArrayList<Comprador> compradores) throws PasswordException, NoSuchAlgorithmException{
         boolean validarcorreo = false;
-        boolean validarclave = false;
+        boolean validarclave = true;
         Comprador comprador = null;
         for (int i = 0; i < compradores.size(); i++) {
             String clave_i = compradores.get(i).getClave();//clave del comprador que estamos tomando
@@ -163,7 +163,7 @@ public class Comprador implements Serializable{
         return (max+1);        
     }
     
-    public static void registrarNuevoComprador(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Comprador> compradores, String nomfile) throws CompradorException{
+    public static void registrarNuevoComprador(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Comprador> compradores) throws CompradorException{
         int id = Comprador.nextID(compradores); 
         Comprador c = new Comprador(id, nombres, apellidos, organizacion, correo, clave);
         if (compradores.contains(c) == false) {
@@ -189,20 +189,27 @@ public class Comprador implements Serializable{
         } 
     }
     
-    public static ArrayList<Comprador> readListFromFileSer(String nomfile){
+    public static ArrayList<Comprador> readListFromFileSer(String nomfile) throws FileNotFoundException{
         try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(nomfile)))){
             ArrayList<Comprador> compradores = (ArrayList<Comprador>)in.readObject();
             in.close();
             return compradores;
-        } catch (FileNotFoundException ex) {
-            Alert a = new Alert(Alert.AlertType.ERROR, "No se encontró el archivo.");
-            a.show();
         } catch (IOException | ClassNotFoundException ex) {
             Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo.");
             a.show();
         }
         return null;
     }
-
+    
+    public void cambiarClave(ArrayList<Comprador> compradores, String clave) throws NoSuchAlgorithmException{
+        for(int i = 0; i < compradores.size(); i++)
+        {
+            if (compradores.get(i).equals(this))
+            {
+                compradores.get(i).setClave(Util.toHexString(Util.getSHA(clave)));
+            }
+        }
+        Comprador.saveListToFileSer("src\\main\\resources\\doc\\compradores.ser", compradores);
+    }
 }
 

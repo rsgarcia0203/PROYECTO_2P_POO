@@ -149,3 +149,18 @@
 .tf{
     -fx-background-color:transparent;
 }
+
+.btn2-1{
+    -fx-background-color:linear-gradient(#dc9656,#ab4642);
+    -fx-background-radius: 6em;
+    -fx-font-size:20;
+    -fx-text-fill: #ffffff;   
+}
+
+.btn2-1:hover{
+    -fx-background-color:#dc9656;
+}
+
+.btn2-1:pressed{
+    -fx-background-color:#903c3a;
+}

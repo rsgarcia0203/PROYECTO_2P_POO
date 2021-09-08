@@ -8,7 +8,9 @@ package ec.edu.espol.controller;
 import ec.edu.espol.model.Comprador;
 import ec.edu.espol.model.CompradorException;
 import ec.edu.espol.model.Oferta;
+import ec.edu.espol.model.PlacaException;
 import ec.edu.espol.model.Vehiculo;
+import ec.edu.espol.model.VehiculoException;
 import ec.edu.espol.model.Vendedor;
 import ec.edu.espol.model.VendedorException;
 import ec.edu.espol.proyecto2p.App;
@@ -38,8 +40,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
@@ -160,12 +164,22 @@ public class VendedorController implements Initializable {
     private ArrayList<Vehiculo> vehicles;
     private ArrayList<Comprador> compradores;
     private ArrayList<Vendedor> vendedores;
+    private ArrayList<Oferta> myofertas;
+    private ArrayList<Oferta> ofertasFile;
     private Vehiculo vehiculoSel;
+    private Oferta ofertaSel;
+    @FXML
+    private TextField txt_ruta;
+    @FXML
+    private ImageView img_cargar;
+    @FXML
+    private GridPane contenedor4;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            this.vehiculosFile = Vehiculo.readFile("src\\main\\resources\\doc\\vehiculo.txt");
+            this.vehiculosFile = Vehiculo.readListFromFileSer("src\\main\\resources\\doc\\vehiculos.ser");
+            this.ofertasFile = Oferta.readListFromFileSer("src\\main\\resources\\doc\\oferta.ser");
             ArrayList<String> tipos = new ArrayList<>();
             tipos.add("Automovil");
             tipos.add("Motocicleta");
@@ -198,6 +212,24 @@ public class VendedorController implements Initializable {
                         a.show();
                     }
                 });
+                this.myofertas = this.vendedor.getOfertas();
+                ObservableList<Oferta> ofertas = FXCollections.observableArrayList(this.myofertas);
+                idO_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
+                tiposO_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+                placasO_column.setCellValueFactory(new PropertyValueFactory<>("placas"));
+                precioV_column.setCellValueFactory(new PropertyValueFactory<>("precioV"));
+                precioO_column.setCellValueFactory(new PropertyValueFactory<>("precioOfertado"));
+                tableVehiculos.setItems(vehiculos);
+                tableVehiculos.setOnMouseClicked((MouseEvent e) -> {
+                    Oferta ofertaSeleccionada = tableOfertas.getSelectionModel().getSelectedItem();
+                    if (ofertaSeleccionada != null) {
+                        ofertaSel = ofertaSeleccionada;
+                    } else {
+                        Alert a = new Alert(Alert.AlertType.WARNING, "Debe seleccionar un vehículo.");
+                        a.show();
+                    }
+                });
+
             }
 
         } catch (FileNotFoundException ex) {
@@ -206,8 +238,8 @@ public class VendedorController implements Initializable {
         } catch (NumberFormatException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "Debe de ingresar un precio para ofertar.");
             a.show();
-        } catch (NullPointerException ex){
-            tableVehiculos.setAccessibleText("No tiene vehículos registrados");
+        } catch (NullPointerException ex) {
+
         }
     }
 
@@ -248,6 +280,7 @@ public class VendedorController implements Initializable {
         if (item != null) {
             btn_registrar.setOpacity(1);
             btn_registrar.setDisable(false);
+            activarCont4();
             if (item.equals("Motocicleta")) {
                 activarCont1();
                 desactivarCont2();
@@ -269,7 +302,7 @@ public class VendedorController implements Initializable {
         try {
             String item = (String) cbx_tipos.getValue();
             if (item != null) {
-                int id = vehiculosFile.size() + 1;
+                int id = Vehiculo.nextID(vehiculosFile);
                 if (item.equals("Motocicleta")) {
                     String placa = txt_placa.getText();
                     String marca = txt_marca.getText();
@@ -287,6 +320,7 @@ public class VendedorController implements Initializable {
                         Vehiculo v = new Vehiculo(id, this.vendedor.getID(), placa, marca, modelo, motor, año, recorrido, color, combustible, precio);
                         registrarVehiculo(v);
                     }
+
                 } else if (item.equals("Automovil")) {
                     String placa = txt_placa.getText();
                     String marca = txt_marca.getText();
@@ -331,8 +365,10 @@ public class VendedorController implements Initializable {
         } catch (NumberFormatException ex) {
             Alert a = new Alert(Alert.AlertType.ERROR, "Solo se puede ingresar números.");
             a.showAndWait();
+        } catch (VehiculoException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Ya existe un vehículo registrado con las placas ingresadas.");
+            a.showAndWait();
         }
-
     }
 
     public void registrarVehiculo(Vehiculo v) {
@@ -341,10 +377,9 @@ public class VendedorController implements Initializable {
         a.setHeaderText("Confirmación de datos de registro");
         Optional<ButtonType> resultado = a.showAndWait();
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            v.saveFile("src\\main\\resources\\doc\\vehiculo.txt");
+            Vehiculo.registrarNuevoVehiculo(v, this.vehiculosFile);
             Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Vehiculo registrado con éxito.");
-            a2.showAndWait();
-            toMain();
+            a2.show();
         }
     }
 
@@ -373,8 +408,38 @@ public class VendedorController implements Initializable {
         contenedor3.setDisable(true);
     }
 
+    public void activarCont4() {
+        contenedor4.setOpacity(1);
+        contenedor4.setDisable(false);
+    }
+
+    public void desactivarCont4() {
+        contenedor4.setOpacity(0);
+        contenedor4.setDisable(true);
+    }
+
     @FXML
     private void buscar(MouseEvent event) {
+        try {
+            if (!placas.getText().equals("")) {
+                Vehiculo.validarPlaca(this.vendedor.getVehiculos(), placas.getText());
+                ArrayList<Oferta> Nofertas = Oferta.searchByPlaca(this.myofertas, placas.getText());
+                if (Nofertas.isEmpty()) {
+                    Alert a = new Alert(Alert.AlertType.INFORMATION, "No existen ofertas para el vehiculo de placas"+placas.getText());
+                    a.showAndWait();
+                } else {
+                    tableOfertas.setItems(FXCollections.observableArrayList(Nofertas));
+                }
+            } else {
+                Alert a = new Alert(Alert.AlertType.WARNING, "Debe ingresar una placa.");
+                a.showAndWait();
+            }
+        } catch(NullPointerException ex){
+            
+        } catch(PlacaException ex){
+            Alert a = new Alert(Alert.AlertType.ERROR, "La placa ingresada no coincide con la placa de ninguno de los vehículos registrados a su nombre.");
+            a.showAndWait();
+        }
     }
 
     @FXML
@@ -413,7 +478,7 @@ public class VendedorController implements Initializable {
                 a.setHeaderText("Confirmación de datos de registro");
                 Optional<ButtonType> resultado = a.showAndWait();
                 if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                    Comprador.registrarNuevoComprador(this.vendedor.getNombres(), this.vendedor.getApellidos(), this.vendedor.getOrganizacion(), this.vendedor.getCorreo(), this.vendedor.getClave(), this.compradores, "src\\main\\resources\\doc\\vendedor.txt");
+                    Comprador.registrarNuevoComprador(this.vendedor.getNombres(), this.vendedor.getApellidos(), this.vendedor.getOrganizacion(), this.vendedor.getCorreo(), this.vendedor.getClave(), this.compradores);
                     Vendedor.eliminarVendedor(vendedores, vendedor);
                     Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Rol cambiado con éxito.");
                     a2.showAndWait();
@@ -425,7 +490,7 @@ public class VendedorController implements Initializable {
                 a.setHeaderText("Confirmación de datos de registro");
                 Optional<ButtonType> resultado = a.showAndWait();
                 if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                    Comprador.registrarNuevoComprador(this.vendedor.getNombres(), this.vendedor.getApellidos(), this.vendedor.getOrganizacion(), this.vendedor.getCorreo(), this.vendedor.getClave(), this.compradores, "src\\main\\resources\\doc\\vendedor.txt");
+                    Comprador.registrarNuevoComprador(this.vendedor.getNombres(), this.vendedor.getApellidos(), this.vendedor.getOrganizacion(), this.vendedor.getCorreo(), this.vendedor.getClave(), this.compradores);
                     Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Rol cambiado con éxito.");
                     a2.showAndWait();
                     toMain();
@@ -454,29 +519,39 @@ public class VendedorController implements Initializable {
         } else {
             try {
                 if (this.vendedor.getClave().equals(Util.toHexString(Util.getSHA(contra_anterior)))) {
-                    if (contra_nueva.equals(contra_confirmada)) {
-                        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Está seguro de cambiar su contraseña actual?.");
-                        a.setTitle("SYSTEM-POO");
-                        a.setHeaderText("Confirmación de datos de registro");
-                        Optional<ButtonType> resultado = a.showAndWait();
-                        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                            this.vendedor.setClave(contra_nueva);
-                            Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Contraseña cambiada con éxito.");
-                            a2.showAndWait();
-                            toMain();
+                    if (contra_nueva.equals(contra_anterior)) {
+                        if (contra_nueva.equals(contra_confirmada)) {
+                            Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Está seguro de cambiar su contraseña actual?.");
+                            a.setTitle("SYSTEM-POO");
+                            a.setHeaderText("Confirmación de datos de registro");
+                            Optional<ButtonType> resultado = a.showAndWait();
+                            if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                                this.vendedor.cambiarClave(vendedores, contra_nueva);
+                                Alert a2 = new Alert(Alert.AlertType.INFORMATION, "Contraseña cambiada con éxito.");
+                                a2.showAndWait();
+                                toMain();
+                            }
+                        } else {
+                            Alert a = new Alert(Alert.AlertType.ERROR, "La nueva contraseña no coincide con la indicada en el campo de confirmación. Escríbala de nuevo. En las contraseñas, debe escribir las letras mayúsculas y minúsculas correctamente.");
+                            a.show();
                         }
                     } else {
-                        Alert a = new Alert(Alert.AlertType.ERROR, "La nueva contraseña no coincide con la indicada en el campo de confirmación. Escríbala de nuevo. En las contraseñas, debe escribir las letras mayúsculas y minúsculas correctamente.");
+                        Alert a = new Alert(Alert.AlertType.ERROR, "La nueva contraseña no puede ser igual a la anterior. Escríbala de nuevo. En las contraseñas, debe escribir las letras mayúsculas y minúsculas correctamente.");
                         a.show();
                     }
                 } else {
                     Alert a = new Alert(Alert.AlertType.ERROR, "La contraseña anterior no es correcta. Escríbala de nuevo. En las contraseñas, debe escribir las letras mayúsculas y minúsculas correctamente.");
                     a.show();
                 }
+
             } catch (NoSuchAlgorithmException ex) {
 
             }
         }
+    }
+
+    @FXML
+    private void cargarFile(MouseEvent event) {
     }
 
 }
