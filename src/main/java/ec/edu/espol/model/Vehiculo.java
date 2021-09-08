@@ -49,7 +49,7 @@ public class Vehiculo implements Serializable{
     // constructor automovil
     public Vehiculo(int ID, int IDvendedor, String placa, String marca, String modelo, String tipo_motor, int año, double recorrido, String color, String tipo_combustible, double precio, String transmision, String vidrios){
         this.IDvendedor = IDvendedor;
-        this.tipo = "Automovil";
+        this.tipo = "AUTOMOVIL";
         this.ID = ID;
         this.placa = placa;
         this.marca = marca;
@@ -69,7 +69,7 @@ public class Vehiculo implements Serializable{
     //contrustor moto
     public Vehiculo(int ID, int IDvendedor, String placa, String marca, String modelo, String tipo_motor, int año, double recorrido, String color, String tipo_combustible, double precio){
         this.IDvendedor = IDvendedor;
-        this.tipo = "Motocicleta";
+        this.tipo = "MOTOCICLETA";
         this.ID = ID;
         this.placa = placa;
         this.marca = marca;
@@ -89,7 +89,7 @@ public class Vehiculo implements Serializable{
     // constructor camioneta
     public Vehiculo(int ID, int IDvendedor, String placa, String marca, String modelo, String tipo_motor, int año, double recorrido, String color, String tipo_combustible, double precio, String transmision, String vidrios, String traccion){
         this.IDvendedor = IDvendedor;
-        this.tipo = "Camioneta";
+        this.tipo = "CAMIONETA";
         this.ID = ID;
         this.placa = placa;
         this.marca = marca;

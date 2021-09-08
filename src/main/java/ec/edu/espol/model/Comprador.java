@@ -13,11 +13,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import javafx.scene.control.Alert;
 
 /**
@@ -91,28 +89,6 @@ public class Comprador implements Serializable{
     public void setClave(String clave) {
         this.clave = clave;
     }
-
-    public void saveFile(String nomFile) {
-        try (PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nomFile), true))) {
-            pw.println(this.ID + "|" + this.nombres + "|" + this.apellidos + "|" + this.organizacion + "|" + this.correo + "|" + Util.toHexString(Util.getSHA(this.clave)));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public static ArrayList<Comprador> readFile(String nomFile) throws FileNotFoundException {
-
-        ArrayList<Comprador> comprador = new ArrayList<>();
-        try (Scanner sc = new Scanner(new File(nomFile))) {
-            while (sc.hasNextLine()) {
-                String linea = sc.nextLine();
-                String[] arreglo = linea.split("\\|");
-                Comprador c = new Comprador(Integer.parseInt(arreglo[0]), arreglo[1], arreglo[2], arreglo[3], arreglo[4], arreglo[5]);
-                comprador.add(c);
-            }
-        } 
-        return comprador;
-    }
     
     public static Comprador validarUsuario(String correo, String clave, ArrayList<Comprador> compradores) throws PasswordException, NoSuchAlgorithmException{
         boolean validarcorreo = false;
@@ -174,19 +150,25 @@ public class Comprador implements Serializable{
                 compradores.remove(i);
             }
         }
-        Util.limpiarArchivo("comprador.txt");
-        for(Comprador c: compradores)
-        {
-            c.saveFile("comprador.txt");
-        }
+        Comprador.saveListToFileSer("src\\main\\resources\\doc\\compradores.ser", compradores);
     }      
 
+    public static int nextID(ArrayList<Comprador> compradores){
+        int max = 0;
+        for(Comprador comprador: compradores){
+            if (comprador.getID() > max) {
+                max = comprador.getID();
+            }
+        }
+        return (max+1);        
+    }
     
     public static void registrarNuevoComprador(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Comprador> compradores, String nomfile) throws CompradorException{
-        int id = Util.nextID(nomfile); 
+        int id = Comprador.nextID(compradores); 
         Comprador c = new Comprador(id, nombres, apellidos, organizacion, correo, clave);
         if (compradores.contains(c) == false) {
-            c.saveFile(nomfile);
+            compradores.add(c);
+            Comprador.saveListToFileSer("src\\main\\resources\\doc\\compradores.ser", compradores);
         } else {
             throw new CompradorException("");
         }

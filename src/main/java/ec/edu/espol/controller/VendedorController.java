@@ -206,6 +206,8 @@ public class VendedorController implements Initializable {
         } catch (NumberFormatException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "Debe de ingresar un precio para ofertar.");
             a.show();
+        } catch (NullPointerException ex){
+            tableVehiculos.setAccessibleText("No tiene vehículos registrados");
         }
     }
 

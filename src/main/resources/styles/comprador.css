@@ -66,12 +66,14 @@
 
 .table{
     -fx-font-size:18;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-text-alignment:center;
 }
 
 .table_txt{
     -fx-font-size:12;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-text-alignment:center;
 }
 
 .rbutton{
@@ -91,4 +93,59 @@
 
 .btn2:pressed{
     -fx-background-color:#903c3a;
+}
+
+.comboBox{
+    -fx-background-color:#2196f3;
+    -fx-background-radius: 6em;
+    -fx-font-size:20;
+    -fx-text-fill: #ffffff;
+}
+
+.comboBox:hover{
+    -fx-background-color:#5db6ff;
+}
+
+.comboBox:pressed{
+    -fx-background-color:#104f7c;
+}
+
+.comboBox:cell-selection{
+    -fx-background-color:#2196f3;
+}
+.comboBox:row-selection{
+    -fx-background-color:#2196f3;
+}
+
+.button2{
+    /*-fx-background-color:linear-gradient(#dc9656,#ab4642);*/
+    -fx-background-color:#2196f3;
+    -fx-background-radius: 6em;
+    -fx-font-size:22;
+    -fx-text-fill: #ffffff;
+}
+
+.button2:hover{
+    -fx-background-color:#5db6ff;
+}
+
+.button2:pressed{
+    -fx-background-color:#104f7c;
+}
+
+.lbl2{
+   -fx-font-size:20;
+   -fx-text-fill: #ffffff;
+}
+
+.tf_box2{
+    -fx-background-color:transparent;
+    -fx-border-color:#ffffff;
+    -fx-font-size:20;
+    -fx-border-width: 0px 0px 1px 0px;
+    -fx-text-fill: #ffffff;
+}
+
+.tf{
+    -fx-background-color:transparent;
 }

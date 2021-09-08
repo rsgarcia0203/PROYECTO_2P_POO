@@ -145,7 +145,9 @@ public class CompradorController implements Initializable {
             tipos.add("Camioneta");
             cbx_tipos.setItems(FXCollections.observableArrayList(tipos));
             this.vehicles = Vehiculo.readFile("src\\main\\resources\\doc\\vehiculo.txt");
+            System.out.println(this.vehicles);
             ObservableList<Vehiculo> vehiculos = FXCollections.observableArrayList(this.vehicles);
+            tableOfertas.setItems(vehiculos);
             id_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
             tipos_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
             placas_column.setCellValueFactory(new PropertyValueFactory<>("placa"));
@@ -160,7 +162,6 @@ public class CompradorController implements Initializable {
             transmision_column.setCellValueFactory(new PropertyValueFactory<>("transmision"));
             traccion_column.setCellValueFactory(new PropertyValueFactory<>("traccion"));
             precio_column.setCellValueFactory(new PropertyValueFactory<>("precio"));
-            tableOfertas.setItems(vehiculos);
             tableOfertas.setOnMouseClicked((MouseEvent e) -> {
                 Vehiculo vehiculoSel = tableOfertas.getSelectionModel().getSelectedItem();
                 if (vehiculoSel != null) {
@@ -190,8 +191,8 @@ public class CompradorController implements Initializable {
         } catch (FileNotFoundException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "Documento no encontrado.");
             a.show();
-        } catch (NumberFormatException ex) {
-            Alert a = new Alert(Alert.AlertType.WARNING, "Debe de ingresar un precio para ofertar.");
+        } catch (NullPointerException ex){
+            Alert a = new Alert(Alert.AlertType.WARNING, "No existen vehículos para ese parámetro de búsqueda.");
             a.show();
         }
 
@@ -392,9 +393,10 @@ public class CompradorController implements Initializable {
                     vehiculos = Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal);
                     tableOfertas.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal)));
                 }
-                double precioOfertado;
+                
                 if (!vehiculos.isEmpty()) {
-
+                    double precioOfertado = Double.parseDouble(precioOfer.getText());
+                    
                 } else {
                     Alert a = new Alert(Alert.AlertType.INFORMATION, "No existen vehículos con esos parametros de búsqueda.");
                     a.showAndWait();
@@ -406,7 +408,11 @@ public class CompradorController implements Initializable {
         } catch (NumberFormatException e) {
             Alert a = new Alert(Alert.AlertType.ERROR, "Solo se puede ingresar números.");
             a.showAndWait();
+        } catch (NullPointerException ex){
+            Alert a = new Alert(Alert.AlertType.WARNING, "No existen vehículos para ese parámetro de búsqueda.");
+            a.show();
         }
+
 
     }
 

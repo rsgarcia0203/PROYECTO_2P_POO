@@ -221,6 +221,20 @@ public class Vendedor implements Serializable{
             a.show();
         } 
     }   
-    
+        
+    public static ArrayList<Vendedor> readListFromFileSer(String nomfile){
+        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(nomfile)))){
+            ArrayList<Vendedor> vendedores = (ArrayList<Vendedor>)in.readObject();
+            in.close();
+            return vendedores;
+        } catch (FileNotFoundException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se encontró el archivo.");
+            a.show();
+        } catch (IOException | ClassNotFoundException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo abrir el archivo.");
+            a.show();
+        }
+        return null;
+    }
 
 }

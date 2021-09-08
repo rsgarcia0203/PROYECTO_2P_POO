@@ -3,3 +3,4 @@
 3|John|Escalante|BGCORPSHOP|escalantej@bgcorpshop.com|e44ae647d8d68bdd9f3dbab1c28ffb584de313d2b141e264b8696b7cfa2d78fc
 4|Steven|Zambrano|YACHAY|zambranos@yachay.edu.ec|8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92
 5|Thalia Angeline|Mena Moran|ESPOL|tmena@espol.edu.ec|ca022c1bed97565c3c62f4369155a6f2d6d1744592b6f40bd742bb2358f87b78
+6|Kleber|Nuñez|FIEC|kgnunez@espol.edu.ec|8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92

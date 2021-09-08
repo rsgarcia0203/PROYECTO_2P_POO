@@ -158,7 +158,7 @@ public class Oferta implements Serializable{
         nuevo.saveFile(nomfile);
         System.out.println("Oferta registrada con exito.");
     }
-    
+        
     public static void link(ArrayList<Comprador> compradores, ArrayList<Vehiculo> vehiculos, ArrayList<Oferta> ofertas){
         for(Oferta o: ofertas){
             Comprador c = Comprador.searchByID(compradores, o.getIDcomprador());
