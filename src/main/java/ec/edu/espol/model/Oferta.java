@@ -148,9 +148,19 @@ public class Oferta implements Serializable{
         return "Oferta<" + this.ID + ">{IDvehiculo=" + this.IDvehiculo + ", IDtipo=" + this.tipo + ", IDcomprador=" + this.IDcomprador + ", precioOfertado=" + this.precioOfertado + ", vehiculo=" + this.vehiculo + ", comprador=" + this.comprador + '}';
     }
     
-    public static void registrarNuevaOferta(Vehiculo vehiculo, Comprador comprador, double precioOfertado, String nomfile)
+    public static int nextID(ArrayList<Oferta> ofertas){
+        int max = 0;
+        for(Oferta oferta: ofertas){
+            if (oferta.getID() > max) {
+                max = oferta.getID();
+            }
+        }
+        return (max+1);        
+    }
+    
+    public static void registrarNuevaOferta(Vehiculo vehiculo, Comprador comprador, ArrayList<Oferta> ofertas, double precioOfertado, String nomfile)
     {
-        int id = Util.nextID(nomfile);
+        int id = Oferta.nextID(ofertas);
         int IDvehiculo = vehiculo.getID();
         int IDcomprador = comprador.getID();
         String tipo = vehiculo.getTipo();
