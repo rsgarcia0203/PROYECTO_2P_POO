@@ -113,8 +113,18 @@ public class Venta implements Serializable{
         return ingresos;
     }
     
-    public static void nextIngreso(Vehiculo vehiculo, String nomfile){
-        int ID = Util.nextID(nomfile);
+    public static int nextID(ArrayList<Venta> ventas){
+        int max = 0;
+        for(Venta venta: ventas){
+            if (venta.getID() > max) {
+                max = venta.getID();
+            }
+        }
+        return (max+1);        
+    }
+    
+    public static void nextIngreso(Vehiculo vehiculo, String nomfile, ArrayList<Venta> ventas){
+        int ID = Venta.nextID(ventas);
         int idvehiculo = vehiculo.getID();
         int idvendedor = vehiculo.getIDvendedor();
         Venta v =new Venta(ID,idvendedor,idvehiculo,vehiculo.getTipo());
