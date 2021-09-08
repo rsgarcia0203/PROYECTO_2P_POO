@@ -378,22 +378,31 @@ public class Vehiculo implements Serializable{
                 vehiculos.remove(i);
             }
         }
-        Util.limpiarArchivo("vehiculo.txt");
-        for(Vehiculo v: vehiculos)
-        {
-            v.saveFile("automovil.txt");
+        Vehiculo.saveListToFileSer("src\\main\\resources\\doc\\vehiculos.ser", vehiculos);
+
+    }
+    
+    public static int nextID(ArrayList<Vehiculo> vehiculos){
+        int max = 0;
+        for(Vehiculo vehiculo: vehiculos){
+            if (vehiculo.getID() > max) {
+                max = vehiculo.getID();
+            }
         }
+        return (max+1);        
     }
     
     public static void registrarNuevoComprador(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Comprador> compradores, String nomfile) throws CompradorException{
-        int id = Util.nextID(nomfile); 
+        int id = Comprador.nextID(compradores); 
         Comprador c = new Comprador(id, nombres, apellidos, organizacion, correo, clave);
         if (compradores.contains(c) == false) {
-            c.saveFile(nomfile);
+            compradores.add(c);
+            Comprador.saveListToFileSer("src\\main\\resources\\doc\\compradores.ser", compradores);
         } else {
             throw new CompradorException("");
         }
 
+    }
     }
     
     public static void saveListToFileSer(String nomfile, ArrayList<Vehiculo> vehiculos){
