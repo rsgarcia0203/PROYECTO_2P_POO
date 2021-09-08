@@ -151,11 +151,7 @@ public class Venta implements Serializable{
                 ingresos.remove(i);
             }
         }    
-        Util.limpiarArchivo("ingreso.txt");
-        for(Venta i: ingresos)
-        {
-            i.saveFile("ingreso.txt");
-        }
+        Venta.saveListToFileSer("src\\main\\resources\\doc\\venta.ser", ingresos);
     }
 
     @Override
