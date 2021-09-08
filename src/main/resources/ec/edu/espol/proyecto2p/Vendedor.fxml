@@ -22,8 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" styleClass="tab_pane" stylesheets="@../../../../styles/vendedor.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ec.edu.espol.controller.VendedorController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" styleClass="tab_pane" stylesheets="@../../../../styles/cyv.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ec.edu.espol.controller.VendedorController">
    <tabs>
       <Tab text="Principal">
          <content>
@@ -180,161 +179,8 @@
          </content>
       </Tab>
       <Tab text="Mis ofertas">
-=======
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" styleClass="tab_pane" stylesheets="@../../../../styles/comprador.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ec.edu.espol.controller.VendedorController">
-  <tabs>
-    <Tab text="Perfil">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="root">
-               <children>
-                  <GridPane prefHeight="772.0" prefWidth="1280.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="626.0" minHeight="10.0" prefHeight="426.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="381.0" minHeight="10.0" prefHeight="346.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <GridPane alignment="CENTER" prefHeight="347.0" prefWidth="640.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label text="Correo:" textFill="WHITE" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Nombres:" textFill="WHITE" GridPane.halignment="RIGHT">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER" contentDisplay="CENTER" text="Apellidos:" textFill="WHITE" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER" contentDisplay="CENTER" text="Organización:" textFill="WHITE" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                                 <font>
-                                    <Font size="20.0" />
-                                 </font>
-                              </Label>
-                              <TextField fx:id="txtCorreo" alignment="CENTER" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="300.0" styleClass="tf_box" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                              <TextField fx:id="txtNombres" alignment="CENTER" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="300.0" styleClass="tf_box" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                              <TextField fx:id="txtApellidos" alignment="CENTER" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="300.0" styleClass="tf_box" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                              <TextField fx:id="txtOrganizacion" alignment="CENTER" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="300.0" styleClass="tf_box" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-                           </children>
-                           <GridPane.margin>
-                              <Insets bottom="30.0" top="20.0" />
-                           </GridPane.margin>
-                        </GridPane>
-                        <GridPane GridPane.columnIndex="1">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints maxHeight="280.0" minHeight="10.0" prefHeight="280.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="184.0" minHeight="10.0" prefHeight="104.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="119.0" minHeight="10.0" prefHeight="113.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="119.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <ImageView fitHeight="200.0" fitWidth="250.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                 <image>
-                                    <Image url="@../../../../img/avatardefault_92824.png" />
-                                 </image>
-                              </ImageView>
-                              <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#PasswordChange" prefHeight="42.0" prefWidth="300.0" text="Cambiar contraseña" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                                 <padding>
-                                    <Insets bottom="3.0" />
-                                 </padding>
-                              </Button>
-                              <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#RoleChange" prefHeight="42.0" prefWidth="300.0" text="Cambiar rol" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                                 <padding>
-                                    <Insets bottom="3.0" />
-                                 </padding>
-                              </Button>
-                           </children>
-                        </GridPane>
-                        <VBox fx:id="rol_contenedor" alignment="CENTER" disable="true" opacity="0.0" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <children>
-                              <Label alignment="CENTER" text="Elija su nuevo rol:" />
-                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
-                                 <children>
-                                    <RadioButton fx:id="rb_comprador" mnemonicParsing="false" styleClass="rbutton" text="Comprador" textFill="#bcbcbc">
-                                       <padding>
-                                          <Insets right="10.0" />
-                                       </padding>
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="tipo" />
-                                       </toggleGroup>
-                                    </RadioButton>
-                                    <RadioButton fx:id="rb_vendedor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="191.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="50.0" styleClass="rbutton" text="Vendedor" textFill="#bcbcbc" toggleGroup="$tipo" />
-                                    <RadioButton fx:id="rb_ambos" contentDisplay="TOP" mnemonicParsing="false" styleClass="rbutton" text="Ambos" textFill="#bcbcbc" toggleGroup="$tipo">
-                                       <padding>
-                                          <Insets right="10.0" />
-                                       </padding>
-                                    </RadioButton>
-                                 </children>
-                              </HBox>
-                              <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#cambiarRol" prefHeight="60.0" prefWidth="180.0" styleClass="btn2" text="Cambiar" />
-                           </children>
-                           <GridPane.margin>
-                              <Insets bottom="20.0" top="20.0" />
-                           </GridPane.margin>
-                        </VBox>
-                        <VBox fx:id="contra_contenedor" alignment="CENTER" disable="true" opacity="0.0" prefHeight="200.0" prefWidth="100.0" spacing="20.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <children>
-                              <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="240.0" prefWidth="620.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="422.0" minWidth="10.0" prefWidth="273.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="379.0" minWidth="10.0" prefWidth="347.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="66.0" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="101.0" minHeight="10.0" prefHeight="94.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" text="Contraseña actual:">
-                                       <font>
-                                          <Font name="Open Sans SemiBold" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Contraseña nueva:" GridPane.rowIndex="1" />
-                                    <Label text="Confirme la nueva contraseña:" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                                    <PasswordField fx:id="txt_clave" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="300.0" styleClass="tf_box" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                                    <PasswordField fx:id="txt_clave_nueva" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="300.0" styleClass="tf_box" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                                    <PasswordField fx:id="txt_clave_confirmacion" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="300.0" styleClass="tf_box" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                                 </children>
-                              </GridPane>
-                              <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#cambiarContra" prefHeight="60.0" prefWidth="180.0" styleClass="btn2" text="Cambiar" />
-                           </children>
-                           <GridPane.margin>
-                              <Insets bottom="30.0" left="40.0" />
-                           </GridPane.margin>
-                        </VBox>
-                     </children>
-                  </GridPane>
-               </children></AnchorPane>
-      </content>
-    </Tab>
-      <Tab text="Registrar vehículos">
->>>>>>> origin/master
-        <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-<<<<<<< HEAD
                   <GridPane prefHeight="767.0" prefWidth="1280.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="635.0" minWidth="10.0" prefWidth="370.0" />
@@ -400,65 +246,9 @@
                         </VBox>
                      </children>
                   </GridPane>
-=======
-                  <GridPane layoutX="-1.0" layoutY="-1.0" prefHeight="770.0" prefWidth="371.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER">
-                           <image>
-                              <Image url="@../../../../img/auto.jpg" />
-                           </image>
-                        </ImageView>
-                        <RadioButton fx:id="btnAuto" mnemonicParsing="false" text="Automóvil" textFill="WHITE" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                           <GridPane.margin>
-                              <Insets bottom="30.0" />
-                           </GridPane.margin>
-                        </RadioButton>
-                        <ImageView fitHeight="114.0" fitWidth="226.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-                           <image>
-                              <Image url="@../../../../img/camioneta.jpg" />
-                           </image>
-                        </ImageView>
-                        <RadioButton fx:id="btnCamioneta" mnemonicParsing="false" text="Camioneta" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                           <GridPane.margin>
-                              <Insets bottom="30.0" />
-                           </GridPane.margin>
-                        </RadioButton>
-                        <ImageView fitHeight="132.0" fitWidth="205.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <image>
-                              <Image url="@../../../../img/motocicleta.jpg" />
-                           </image>
-                        </ImageView>
-                        <RadioButton fx:id="btnMoto" mnemonicParsing="false" text="Motocicleta" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                           <GridPane.margin>
-                              <Insets bottom="30.0" />
-                           </GridPane.margin>
-                        </RadioButton>
-                     </children>
-                  </GridPane>
-                  <VBox layoutX="597.0" layoutY="41.0" prefHeight="685.0" prefWidth="475.0" />
->>>>>>> origin/master
                </children>
             </AnchorPane>
-        </content>
       </Tab>
-<<<<<<< HEAD
       <Tab text="Perfil">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="root">
@@ -607,28 +397,4 @@
          </content>
       </Tab>
    </tabs>
-=======
-    <Tab text="Ofertas">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <BorderPane layoutX="-1.0" prefHeight="768.0" prefWidth="1280.0">
-                     <top>
-                        <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-                     </top>
-                     <left>
-                        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
-                     </left>
-                     <right>
-                        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
-                     </right>
-                     <bottom>
-                        <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-                     </bottom>
-                  </BorderPane>
-               </children></AnchorPane>
-      </content>
-    </Tab>
-  </tabs>
->>>>>>> origin/master
 </TabPane>
