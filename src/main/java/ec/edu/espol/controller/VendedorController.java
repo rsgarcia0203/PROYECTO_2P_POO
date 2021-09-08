@@ -254,10 +254,6 @@ public class VendedorController implements Initializable {
         this.vendedores = vendedores;
     }
 
-    public void setVehiculo(Vehiculo vehiculo) {
-        this.vehiculoSel = vehiculo;
-    }
-
     public void toMain() {
         try {
             FXMLLoader fxmlloader = App.loadFXMLoader("Login");
@@ -449,12 +445,13 @@ public class VendedorController implements Initializable {
 
     @FXML
     private void aceptarOferta(MouseEvent event) {
-        if(ofertaSel != null){
+        if(this.ofertaSel != null){
             try {
-                Oferta.Aceptar(this.ofertas, vehiculos, vehiculoSel);
+                Vehiculo vehiculoO = ofertaSel.getVehiculo();
+                Oferta.Aceptar(this.ofertasFile, this.vehiculosFile, vehiculoO);
                 Alert a = new Alert(Alert.AlertType.INFORMATION, "Oferta aceptada con éxito, se remitirá un mensaje al comprador a fin de que se ponga en contacto con usted.");
                 a.showAndWait();
-            } catch (IOException | NullPointerException ex) {
+            } catch (NullPointerException | IOException ex) {
             }
         } else {
             Alert a = new Alert(Alert.AlertType.ERROR, "Debe seleccionar una oferta");
@@ -464,12 +461,13 @@ public class VendedorController implements Initializable {
 
     @FXML
     private void declinarOferta(MouseEvent event) {
-        if(ofertaSel != null){
+        if(this.ofertaSel != null){
             try {
-                Oferta.eliminarOferta(this.ofertas, vehiculos, vehiculoSel);
+                Vehiculo vehiculoO = ofertaSel.getVehiculo();
+                Oferta.eliminarOferta(this.ofertasFile, this.vehiculosFile, vehiculoO);
                 Alert a = new Alert(Alert.AlertType.INFORMATION, "Oferta declinada con éxito.");
                 a.showAndWait();
-            } catch (IOException | NullPointerException ex) {
+            } catch (NullPointerException | IOException ex) {
             }
         } else {
             Alert a = new Alert(Alert.AlertType.ERROR, "Debe seleccionar una oferta");

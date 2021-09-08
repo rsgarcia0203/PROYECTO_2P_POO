@@ -613,7 +613,8 @@ public class CyVController implements Initializable {
     private void aceptarOferta(MouseEvent event) {
         if (ofertaSel != null) {
             try {
-                Oferta.Aceptar(this.ofertas, vehiculos, vehiculoSel);
+                Vehiculo vehiculoO = ofertaSel.getVehiculo();
+                Oferta.Aceptar(this.ofertas, vehiculos, vehiculoO);
                 Alert a = new Alert(Alert.AlertType.INFORMATION, "Oferta aceptada con éxito, se remitirá un mensaje al comprador a fin de que se ponga en contacto con usted.");
                 a.showAndWait();
             } catch (IOException | NullPointerException ex) {
@@ -628,7 +629,8 @@ public class CyVController implements Initializable {
     private void declinarOferta(MouseEvent event) {
         if (ofertaSel != null) {
             try {
-                Oferta.eliminarOferta(this.ofertas, vehiculos, vehiculoSel);
+                Vehiculo vehiculoO = ofertaSel.getVehiculo();
+                Oferta.eliminarOferta(this.ofertas, vehiculos, vehiculoO);
                 Alert a = new Alert(Alert.AlertType.INFORMATION, "Oferta declinada con éxito.");
                 a.showAndWait();
             } catch (IOException | NullPointerException ex) {
