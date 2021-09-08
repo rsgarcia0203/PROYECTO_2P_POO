@@ -310,7 +310,10 @@ public class CyVController implements Initializable {
         } catch (NumberFormatException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "Debe de ingresar un precio para ofertar.");
             a.show();
+        } catch (NullPointerException ex) {
+             
         }
+
     }
 
     public void setVendedor(Vendedor vendedor) {
@@ -500,88 +503,6 @@ public class CyVController implements Initializable {
             Alert a = new Alert(Alert.AlertType.ERROR, "Solo se puede ingresar números.");
             a.showAndWait();
         }
-    }
-
-    private void buscar(MouseEvent event) {
-
-        try {
-            if (recorridoIni.getText().equals("") && recorridoFin.getText().equals("") && anioIni.getText().equals("") && anioFin.getText().equals("") && precioIni.getText().equals("") && precioFin.getText().equals("") && precioOfer.getText().equals("")) {
-                Alert a = new Alert(Alert.AlertType.ERROR, "Debe llenar al menos un parámetro antes de dar clic en buscar.");
-                a.showAndWait();
-            } else {
-                double recorridoInicial = Double.parseDouble(recorridoIni.getPromptText());
-                double recorridoFinal = Double.parseDouble(recorridoFin.getPromptText());
-                if (!recorridoIni.getText().equals("") && !recorridoFin.getText().equals("")) {
-                    recorridoInicial = Double.parseDouble(recorridoIni.getText());
-                    recorridoFinal = Double.parseDouble(recorridoFin.getText());
-                } else if ((!recorridoIni.getText().equals("") && recorridoFin.getText().equals("")) || (recorridoIni.getText().equals("") && !recorridoFin.getText().equals(""))) {
-                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
-                    a.setTitle("SYSTEM-POO");
-                    a.setHeaderText("Rangos de recorridos.");
-                    a.showAndWait();
-                } else {
-                    recorridoInicial = Double.parseDouble(recorridoIni.getPromptText());
-                    recorridoFinal = Double.parseDouble(recorridoFin.getPromptText());
-                }
-
-                int añoInicial = Integer.parseInt(anioIni.getPromptText());
-                int añoFinal = Integer.parseInt(anioFin.getPromptText());
-                if (!anioIni.getText().equals("") && !anioFin.getText().equals("")) {
-                    añoInicial = Integer.parseInt(anioIni.getText());
-                    añoFinal = Integer.parseInt(anioFin.getText());
-                } else if ((!anioIni.getText().equals("") && anioFin.getText().equals("")) || (anioIni.getText().equals("") && !anioFin.getText().equals(""))) {
-                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
-                    a.setTitle("SYSTEM-POO");
-                    a.setHeaderText("Rangos de años.");
-                    a.showAndWait();
-                } else {
-                    añoInicial = Integer.parseInt(anioIni.getPromptText());
-                    añoFinal = Integer.parseInt(anioFin.getPromptText());
-                }
-
-                double precioInicial = Double.parseDouble(precioIni.getPromptText());
-                double precioFinal = Double.parseDouble(precioFin.getPromptText());
-                if (!precioIni.getText().equals("") && !precioFin.getText().equals("")) {
-                    precioInicial = Double.parseDouble(precioIni.getText());
-                    precioFinal = Double.parseDouble(precioFin.getText());
-                } else if ((!precioIni.getText().equals("") && precioFin.getText().equals("")) || (precioIni.getText().equals("") && !precioFin.getText().equals(""))) {
-                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
-                    a.setTitle("SYSTEM-POO");
-                    a.setHeaderText("Rangos de precios.");
-                    a.showAndWait();
-                } else {
-                    precioInicial = Double.parseDouble(precioIni.getPromptText());
-                    precioFinal = Double.parseDouble(precioFin.getPromptText());
-                }
-
-                if (recorridoInicial != 0 && recorridoFinal != 0) {
-                    vehiculos = Vehiculo.vehiculosxRecorrido(vehiculos, recorridoInicial, recorridoFinal);
-                    tablexOfertar.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxRecorrido(vehiculos, recorridoInicial, recorridoFinal)));
-                }
-
-                if (añoInicial != 0 && añoFinal != 0) {
-                    vehiculos = Vehiculo.vehiculosxAño(vehiculos, añoInicial, añoFinal);
-                    tablexOfertar.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxAño(vehiculos, añoInicial, añoFinal)));
-                }
-
-                if (precioInicial != 0 && precioFinal != 0) {
-                    vehiculos = Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal);
-                    tablexOfertar.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal)));
-                }
-
-                if (vehiculos.isEmpty()) {
-                    Alert a = new Alert(Alert.AlertType.INFORMATION, "No existen vehículos con esos parametros de búsqueda.");
-                    a.showAndWait();
-                }
-            }
-        } catch (NumberFormatException e) {
-            Alert a = new Alert(Alert.AlertType.ERROR, "Solo se puede ingresar números.");
-            a.showAndWait();
-        } catch (NullPointerException ex) {
-            Alert a = new Alert(Alert.AlertType.WARNING, "No existen vehículos para ese parámetro de búsqueda.");
-            a.show();
-        }
-
     }
 
     @FXML
@@ -779,6 +700,88 @@ public class CyVController implements Initializable {
             } else {
                 Alert a = new Alert(Alert.AlertType.WARNING, "Debe seleccionar un vehículo para ofertar.");
                 a.show();
+            }
+        } catch (NumberFormatException e) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Solo se puede ingresar números.");
+            a.showAndWait();
+        } catch (NullPointerException ex) {
+            Alert a = new Alert(Alert.AlertType.WARNING, "No existen vehículos para ese parámetro de búsqueda.");
+            a.show();
+        }
+
+    }
+
+    @FXML
+    private void buscar(MouseEvent event) {
+        try {
+            if (recorridoIni.getText().equals("") && recorridoFin.getText().equals("") && anioIni.getText().equals("") && anioFin.getText().equals("") && precioIni.getText().equals("") && precioFin.getText().equals("") && precioOfer.getText().equals("")) {
+                Alert a = new Alert(Alert.AlertType.ERROR, "Debe llenar al menos un parámetro antes de dar clic en buscar.");
+                a.showAndWait();
+            } else {
+                double recorridoInicial = Double.parseDouble(recorridoIni.getPromptText());
+                double recorridoFinal = Double.parseDouble(recorridoFin.getPromptText());
+                if (!recorridoIni.getText().equals("") && !recorridoFin.getText().equals("")) {
+                    recorridoInicial = Double.parseDouble(recorridoIni.getText());
+                    recorridoFinal = Double.parseDouble(recorridoFin.getText());
+                } else if ((!recorridoIni.getText().equals("") && recorridoFin.getText().equals("")) || (recorridoIni.getText().equals("") && !recorridoFin.getText().equals(""))) {
+                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
+                    a.setTitle("SYSTEM-POO");
+                    a.setHeaderText("Rangos de recorridos.");
+                    a.showAndWait();
+                } else {
+                    recorridoInicial = Double.parseDouble(recorridoIni.getPromptText());
+                    recorridoFinal = Double.parseDouble(recorridoFin.getPromptText());
+                }
+
+                int añoInicial = Integer.parseInt(anioIni.getPromptText());
+                int añoFinal = Integer.parseInt(anioFin.getPromptText());
+                if (!anioIni.getText().equals("") && !anioFin.getText().equals("")) {
+                    añoInicial = Integer.parseInt(anioIni.getText());
+                    añoFinal = Integer.parseInt(anioFin.getText());
+                } else if ((!anioIni.getText().equals("") && anioFin.getText().equals("")) || (anioIni.getText().equals("") && !anioFin.getText().equals(""))) {
+                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
+                    a.setTitle("SYSTEM-POO");
+                    a.setHeaderText("Rangos de años.");
+                    a.showAndWait();
+                } else {
+                    añoInicial = Integer.parseInt(anioIni.getPromptText());
+                    añoFinal = Integer.parseInt(anioFin.getPromptText());
+                }
+
+                double precioInicial = Double.parseDouble(precioIni.getPromptText());
+                double precioFinal = Double.parseDouble(precioFin.getPromptText());
+                if (!precioIni.getText().equals("") && !precioFin.getText().equals("")) {
+                    precioInicial = Double.parseDouble(precioIni.getText());
+                    precioFinal = Double.parseDouble(precioFin.getText());
+                } else if ((!precioIni.getText().equals("") && precioFin.getText().equals("")) || (precioIni.getText().equals("") && !precioFin.getText().equals(""))) {
+                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe de llenar el inicio y fin del parámetro de busqueda.");
+                    a.setTitle("SYSTEM-POO");
+                    a.setHeaderText("Rangos de precios.");
+                    a.showAndWait();
+                } else {
+                    precioInicial = Double.parseDouble(precioIni.getPromptText());
+                    precioFinal = Double.parseDouble(precioFin.getPromptText());
+                }
+
+                if (recorridoInicial != 0 && recorridoFinal != 0) {
+                    vehiculos = Vehiculo.vehiculosxRecorrido(vehiculos, recorridoInicial, recorridoFinal);
+                    tablexOfertar.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxRecorrido(vehiculos, recorridoInicial, recorridoFinal)));
+                }
+
+                if (añoInicial != 0 && añoFinal != 0) {
+                    vehiculos = Vehiculo.vehiculosxAño(vehiculos, añoInicial, añoFinal);
+                    tablexOfertar.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxAño(vehiculos, añoInicial, añoFinal)));
+                }
+
+                if (precioInicial != 0 && precioFinal != 0) {
+                    vehiculos = Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal);
+                    tablexOfertar.setItems(FXCollections.observableArrayList(Vehiculo.vehiculosxPrecio(vehiculos, precioInicial, precioFinal)));
+                }
+
+                if (vehiculos.isEmpty()) {
+                    Alert a = new Alert(Alert.AlertType.INFORMATION, "No existen vehículos con esos parametros de búsqueda.");
+                    a.showAndWait();
+                }
             }
         } catch (NumberFormatException e) {
             Alert a = new Alert(Alert.AlertType.ERROR, "Solo se puede ingresar números.");

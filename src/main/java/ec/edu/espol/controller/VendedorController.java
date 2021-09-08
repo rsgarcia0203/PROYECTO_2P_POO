@@ -187,44 +187,41 @@ public class VendedorController implements Initializable {
             tipos.add("Motocicleta");
             tipos.add("Camioneta");
             cbx_tipos.setItems(FXCollections.observableArrayList(tipos));
-            if (!(this.vendedor.getVehiculos().isEmpty())) {
-                this.vehicles = this.vendedor.getVehiculos();
-                ObservableList<Vehiculo> vehiculos = FXCollections.observableArrayList(this.vehicles);
-                id_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
-                tipos_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
-                placas_column.setCellValueFactory(new PropertyValueFactory<>("placa"));
-                marca_column.setCellValueFactory(new PropertyValueFactory<>("marca"));
-                modelo_column.setCellValueFactory(new PropertyValueFactory<>("modelo"));
-                motor_column.setCellValueFactory(new PropertyValueFactory<>("tipo_motor"));
-                anio_column.setCellValueFactory(new PropertyValueFactory<>("año"));
-                recorrido_column.setCellValueFactory(new PropertyValueFactory<>("recorrido"));
-                color_column.setCellValueFactory(new PropertyValueFactory<>("color"));
-                combustible_column.setCellValueFactory(new PropertyValueFactory<>("tipo_combustible"));
-                vidrios_column.setCellValueFactory(new PropertyValueFactory<>("vidrios"));
-                transmision_column.setCellValueFactory(new PropertyValueFactory<>("transmision"));
-                traccion_column.setCellValueFactory(new PropertyValueFactory<>("traccion"));
-                precio_column.setCellValueFactory(new PropertyValueFactory<>("precio"));
-                tableVehiculos.setItems(vehiculos);
-                this.myofertas = this.vendedor.getOfertas();
-                this.myofertas.sort(Oferta::compareByPrecioOfertado);
-                ObservableList<Oferta> ofertas = FXCollections.observableArrayList(this.myofertas);
-                idO_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
-                tiposO_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
-                placasO_column.setCellValueFactory(new PropertyValueFactory<>("placas"));
-                precioV_column.setCellValueFactory(new PropertyValueFactory<>("precioV"));
-                precioO_column.setCellValueFactory(new PropertyValueFactory<>("precioOfertado"));
-                tableOfertas.setItems(ofertas);
-                tableOfertas.setOnMouseClicked((MouseEvent e) -> {
-                    Oferta ofertaSeleccionada = tableOfertas.getSelectionModel().getSelectedItem();
-                    if (ofertaSeleccionada != null) {
-                        ofertaSel = ofertaSeleccionada;
-                    } else {
-                        Alert a = new Alert(Alert.AlertType.WARNING, "Debe seleccionar un vehículo.");
-                        a.show();
-                    }
-                });
-
-            }
+            this.vehicles = this.vendedor.getVehiculos();
+            ObservableList<Vehiculo> vehiculos = FXCollections.observableArrayList(this.vehicles);
+            id_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
+            tipos_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+            placas_column.setCellValueFactory(new PropertyValueFactory<>("placa"));
+            marca_column.setCellValueFactory(new PropertyValueFactory<>("marca"));
+            modelo_column.setCellValueFactory(new PropertyValueFactory<>("modelo"));
+            motor_column.setCellValueFactory(new PropertyValueFactory<>("tipo_motor"));
+            anio_column.setCellValueFactory(new PropertyValueFactory<>("año"));
+            recorrido_column.setCellValueFactory(new PropertyValueFactory<>("recorrido"));
+            color_column.setCellValueFactory(new PropertyValueFactory<>("color"));
+            combustible_column.setCellValueFactory(new PropertyValueFactory<>("tipo_combustible"));
+            vidrios_column.setCellValueFactory(new PropertyValueFactory<>("vidrios"));
+            transmision_column.setCellValueFactory(new PropertyValueFactory<>("transmision"));
+            traccion_column.setCellValueFactory(new PropertyValueFactory<>("traccion"));
+            precio_column.setCellValueFactory(new PropertyValueFactory<>("precio"));
+            tableVehiculos.setItems(vehiculos);
+            this.myofertas = this.vendedor.getOfertas();
+            this.myofertas.sort(Oferta::compareByPrecioOfertado);
+            ObservableList<Oferta> ofertas = FXCollections.observableArrayList(this.myofertas);
+            idO_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
+            tiposO_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+            placasO_column.setCellValueFactory(new PropertyValueFactory<>("placas"));
+            precioV_column.setCellValueFactory(new PropertyValueFactory<>("precioV"));
+            precioO_column.setCellValueFactory(new PropertyValueFactory<>("precioOfertado"));
+            tableOfertas.setItems(ofertas);
+            tableOfertas.setOnMouseClicked((MouseEvent e) -> {
+                Oferta ofertaSeleccionada = tableOfertas.getSelectionModel().getSelectedItem();
+                if (ofertaSeleccionada != null) {
+                    ofertaSel = ofertaSeleccionada;
+                } else {
+                    Alert a = new Alert(Alert.AlertType.WARNING, "Debe seleccionar un vehículo.");
+                    a.show();
+                }
+            });
 
         } catch (FileNotFoundException ex) {
             Alert a = new Alert(Alert.AlertType.WARNING, "Documento no encontrado.");
@@ -374,7 +371,8 @@ public class VendedorController implements Initializable {
             for (Vendedor ven : this.vendedores) {
                 if (ven.equals(this.vendedor)) {
                     ven.getVehiculos().add(v);
-                    Vendedor.saveListToFileSer("src\\main\\resources\\doc\\vendedores.ser", vendedores);
+                    tableVehiculos.setItems(FXCollections.observableArrayList(ven.getVehiculos()));
+                    Vendedor.saveListToFileSer("src\\main\\resources\\doc\\vendedores.ser", this.vendedores);
                 }
             }
             this.vendedor.getVehiculos().add(v);
@@ -445,7 +443,7 @@ public class VendedorController implements Initializable {
 
     @FXML
     private void aceptarOferta(MouseEvent event) {
-        if(this.ofertaSel != null){
+        if (this.ofertaSel != null) {
             try {
                 Vehiculo vehiculoO = ofertaSel.getVehiculo();
                 Oferta.Aceptar(this.ofertasFile, this.vehiculosFile, vehiculoO);
@@ -461,7 +459,7 @@ public class VendedorController implements Initializable {
 
     @FXML
     private void declinarOferta(MouseEvent event) {
-        if(this.ofertaSel != null){
+        if (this.ofertaSel != null) {
             try {
                 Vehiculo vehiculoO = ofertaSel.getVehiculo();
                 Oferta.eliminarOferta(this.ofertasFile, this.vehiculosFile, vehiculoO);

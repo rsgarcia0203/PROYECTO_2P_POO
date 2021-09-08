@@ -78,6 +78,11 @@ public class LoginController implements Initializable {
                     a.show();
                     FXMLLoader fxmlloader = App.loadFXMLoader("CyV");
                     App.setRoot(fxmlloader);
+                    CyVController cyv = fxmlloader.getController();
+                    cyv.setComprador(validarComprador);
+                    cyv.setVendedor(validarVendedor);
+                    cyv.setCompradores(compradores);
+                    cyv.setVendedores(vendedores);
                 } else if (validarComprador != null) {
                     Alert a = new Alert(Alert.AlertType.INFORMATION, "Ingreso exitoso.");
                     a.show();
