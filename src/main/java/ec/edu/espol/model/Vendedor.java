@@ -179,7 +179,7 @@ public class Vendedor implements Serializable{
         return "Vendedor<" + this.ID + ">{Nombres=" + this.nombres + ", Apellidos=" + this.apellidos + ", Organizacion=" + this.organizacion + ", Correo=" + this.correo + ", Clave=" + this.clave + "}";
     }
 
-    public static void eliminarVendedor(ArrayList<Vendedor> vendedores, Vendedor vendedor) throws IOException
+public static void eliminarVendedor(ArrayList<Vendedor> vendedores, Vendedor vendedor) throws IOException
     {
         for(int i = 0; i < vendedores.size(); i++)
         {
@@ -188,22 +188,28 @@ public class Vendedor implements Serializable{
                 vendedores.remove(i);
             }
         }
-        Util.limpiarArchivo("vendedor.txt");
-        for(Vendedor v: vendedores)
-        {
-            v.saveFile("vendedor.txt");
+        Vendedor.saveListToFileSer("src\\main\\resources\\doc\\compradores.ser", vendedores);
+
+    }
+    
+    public static int nextID(ArrayList<Vendedor> vendedores){
+        int max = 0;
+        for(Vendedor vendedor: vendedores){
+            if (vendedor.getID() > max) {
+                max = vendedor.getID();
+            }
         }
-    }      
+        return (max+1);        
+    }
     
     public static void registrarNuevoVendedor(String nombres, String apellidos, String organizacion, String correo, String clave, ArrayList<Vendedor> vendedores, String nomfile) throws VendedorException{
-        int id = Util.nextID(nomfile); 
+        int id = Vendedor.nextID(vendedores); 
         Vendedor v = new Vendedor(id, nombres, apellidos, organizacion, correo, clave);
         if (vendedores.contains(v) == false) {
-            v.saveFile(nomfile);
-            Alert a = new Alert(Alert.AlertType.INFORMATION, "Usuario registrado.");
-            a.show();
+            vendedores.add(v);
+            Vendedor.saveListToFileSer("src\\main\\resources\\doc\\vendedores.ser", vendedores);
         } else {
-            throw new VendedorException("");
+            throw new CompradorException("");
         }
 
     }
