@@ -215,4 +215,9 @@ public class Oferta implements Serializable {
         }
         return null;
     }
+    
+    public static int compareByPrecioOfertado(Oferta o1, Oferta o2){
+        return Double.compare(o2.getPrecioOfertado(),o1.getPrecioOfertado());
+    }
+
 }

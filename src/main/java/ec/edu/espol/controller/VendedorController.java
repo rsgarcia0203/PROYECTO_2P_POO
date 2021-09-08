@@ -213,6 +213,7 @@ public class VendedorController implements Initializable {
                     }
                 });
                 this.myofertas = this.vendedor.getOfertas();
+                this.myofertas.sort(Oferta::compareByPrecioOfertado);
                 ObservableList<Oferta> ofertas = FXCollections.observableArrayList(this.myofertas);
                 idO_column.setCellValueFactory(new PropertyValueFactory<>("ID"));
                 tiposO_column.setCellValueFactory(new PropertyValueFactory<>("tipo"));
@@ -428,6 +429,7 @@ public class VendedorController implements Initializable {
                     Alert a = new Alert(Alert.AlertType.INFORMATION, "No existen ofertas para el vehiculo de placas"+placas.getText());
                     a.showAndWait();
                 } else {
+                    Nofertas.sort(Oferta::compareByPrecioOfertado);
                     tableOfertas.setItems(FXCollections.observableArrayList(Nofertas));
                 }
             } else {
