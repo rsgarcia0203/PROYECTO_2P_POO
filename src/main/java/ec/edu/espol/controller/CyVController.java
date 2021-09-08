@@ -711,7 +711,7 @@ public class CyVController implements Initializable {
         } else {
             try {
                 if (this.vendedor.getClave().equals(Util.toHexString(Util.getSHA(contra_anterior)))) {
-                    if (contra_nueva.equals(contra_confirmada)) {
+                    if (!contra_nueva.equals(contra_confirmada)) {
                         Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Está seguro de cambiar su contraseña actual?.");
                         a.setTitle("SYSTEM-POO");
                         a.setHeaderText("Confirmación de datos de registro");

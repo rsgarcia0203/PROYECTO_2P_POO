@@ -277,7 +277,7 @@ public class CompradorController implements Initializable {
         } else {
             try {
                 if (this.comprador.getClave().equals(Util.toHexString(Util.getSHA(contra_anterior)))) {
-                    if (contra_nueva.equals(contra_anterior)) {
+                    if (!contra_nueva.equals(contra_anterior)) {
                         if (contra_nueva.equals(contra_confirmada)) {
                             Alert a = new Alert(Alert.AlertType.CONFIRMATION, "¿Está seguro de cambiar su contraseña actual?.");
                             a.setTitle("SYSTEM-POO");
